@@ -1,0 +1,20 @@
+.body-html h2 {
+    font: bold;
+}
+
+.body-html p {
+    margin-bottom: .7rem !important; 
+    /* padding-left: 1rem !important; */
+}
+
+.body-html ul {
+    margin-bottom: 1rem !important;
+    list-style-type: circle !important;
+    padding-left: 3rem !important;
+}
+
+.body-html strong {
+    color:#2e2e2e;
+    font-size: 1.1rem;
+    margin-bottom: .2rem !important;
+}

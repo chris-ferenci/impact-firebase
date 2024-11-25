@@ -1,0 +1,8 @@
+.circular-profile {
+    width: 48px;          /* Set the width of the image */
+    height: 48px;         /* Set the height of the image */
+    border-radius: 50%;
+    border: 2px solid #2e2e2e;    /* This makes the image circular */
+    object-fit: cover;     /* Ensures the image covers the full area */
+    overflow: hidden;      /* Ensures nothing spills out of the circular shape */
+}
