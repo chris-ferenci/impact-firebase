@@ -23,7 +23,7 @@ def count_tokens(model, messages):
 def summarize():
     data = request.json
     job_description = data.get('jobDescription', '')
-    print(data)
+    # print(data)
 
     if not job_description:
         return jsonify({'error': 'No job description provided'}), 400
@@ -34,7 +34,7 @@ def summarize():
             model="gpt-4o-mini",  # Use the appropriate model (e.g., "gpt-4" or "gpt-3.5-turbo")
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": f"Summarize the following job description in one 3-4 sentence paragraph. If you see a salary, add it as a bulletpoint:\n{job_description}"}
+                {"role": "user", "content": f"Summarize the following job description in one 3-4 sentence paragraph. If you find see a salary, add it as a bulletpoint:\n{job_description}"}
             ]
         )
         # Extract the summarized content

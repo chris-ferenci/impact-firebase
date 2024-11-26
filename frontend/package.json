@@ -3,7 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "proxy": "http://localhost:5000",
   "scripts": {
+    "start": "npm run dev",
+    "start-api": "cd backend/app && venv/bin/flask run --no-debugger",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
@@ -38,4 +41,5 @@
     "tailwindcss": "^3.3.3",
     "vite": "^4.4.5"
   }
+  
 }
