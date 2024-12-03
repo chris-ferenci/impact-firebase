@@ -1,14 +1,22 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from openai import OpenAI
+from dotenv import load_dotenv
+import os
 import tiktoken  # OpenAI tokenizer library
 
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Configure OpenAI client
-client = OpenAI(api_key='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')  # Replace with your actual API key
+# Configure OpenAI client using the API key from the environment variable
+openai_api_key = os.getenv('OPENAI_API_KEY')
+if not openai_api_key:
+    raise ValueError("OPENAI_API_KEY environment variable is not set")
+
+client = OpenAI(api_key=openai_api_key)
 
 # Health Check Endpoint
 @app.route('/health', methods=['GET'])
