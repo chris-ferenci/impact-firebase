@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy environments
-COPY .env /app/.env
+# COPY .env /app/.env
 
 # Copy requirements and install dependencies
 COPY requirements.txt ./
