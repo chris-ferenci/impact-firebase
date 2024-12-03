@@ -5,10 +5,15 @@ import tiktoken  # OpenAI tokenizer library
 
 
 app = Flask(__name__)
-cors = CORS(app)
+CORS(app)
 
 # Configure OpenAI client
 client = OpenAI(api_key='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')  # Replace with your actual API key
+
+# Health Check Endpoint
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "API is running"}), 200
 
 # Function to calculate token count
 def count_tokens(model, messages):

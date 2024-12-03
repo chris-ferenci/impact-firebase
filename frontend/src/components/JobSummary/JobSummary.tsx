@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import config from '../../config'
 
 function JobSummary({ jobDescription }) {
     const [summary, setSummary] = useState("");
@@ -21,7 +22,7 @@ function JobSummary({ jobDescription }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch("http://127.0.0.1:5000/summarize", {
+            const response = await fetch('/summarize', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
