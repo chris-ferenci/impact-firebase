@@ -26,7 +26,9 @@ FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Inject environment variable for BACKEND_URL
+ENV BACKEND_URL=https://backend-service.onrender.com
+RUN envsubst '$BACKEND_URL' < /etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf.tmp && mv /etc/nginx/conf.d/default.conf.tmp /etc/nginx/conf.d/default.conf
 
 # Expose the default Nginx port
 EXPOSE 80
