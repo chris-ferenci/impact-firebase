@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import config from '../../config'
 
 function JobSummary({ jobDescription }) {
     const [summary, setSummary] = useState("");
