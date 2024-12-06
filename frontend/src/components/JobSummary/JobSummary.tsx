@@ -21,7 +21,7 @@ function JobSummary({ jobDescription }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('/summarize', {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/summarize`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
