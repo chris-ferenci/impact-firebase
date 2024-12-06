@@ -30,6 +30,8 @@ COPY nginx/default.conf.template /etc/nginx/conf.d/default.conf.template
 ARG REACT_APP_BACKEND_URL
 ENV react_app_backend_url=$REACT_APP_BACKEND_URL
 
+RUN echo "Using REACT_APP_BACKEND_URL: $REACT_APP_BACKEND_URL"
+
 RUN envsubst '$react_app_backend_url' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 
 # Expose the default Nginx port
