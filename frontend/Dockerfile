@@ -28,9 +28,9 @@ COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Inject environment variable for BACKEND_URL
 ARG REACT_APP_BACKEND_URL
-ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
+ENV backend_url=$REACT_APP_BACKEND_URL
 
-RUN envsubst '$REACT_APP_BACKEND_URL' < /etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf.tmp && mv /etc/nginx/conf.d/default.conf.tmp /etc/nginx/conf.d/default.conf
+RUN envsubst '$backend_url' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 
 # Expose the default Nginx port
 EXPOSE 80
