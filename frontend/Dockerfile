@@ -24,7 +24,7 @@ FROM nginx:alpine
 
 # Copy the build output from the first stage
 COPY --from=build /app/build /usr/share/nginx/html
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx/default.conf.template /etc/nginx/conf.d/default.conf.template
 
 # Inject environment variable for BACKEND_URL
 ARG REACT_APP_BACKEND_URL
