@@ -6,6 +6,7 @@ function JobSummary({ jobDescription }) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        console.log("env:", process.env.REACT_APP_BACKEND_URL)
         if (jobDescription) {
             // Check if a summary is already saved in localStorage
             const cachedSummary = localStorage.getItem(jobDescription);
