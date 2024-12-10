@@ -45,36 +45,35 @@ function JobCard({ job, getCountryFlag }) {
       };
 
     return (
-        <div className="job-card shadow-lg p-8">
+        <div className="bg-white job-card grid grid-cols-5 justify-between shadow-lg p-8 items-center">
 
-            <Link className="text-neutral-900 hover:underline hover:text-neutral-900" to={generateJobUrl(job.id)}>
-                <h2 className='text-2xl font-bold mb-4 tracking-tight truncate-2-lines' title={job.fields.title}>{job.fields.title}</h2>
-            </Link>
-            
-            <p className={`inline-block mb-4 px-4 py-1 text-sm font-medium rounded ${getCategoryColor(job.fields.career_categories && job.fields.career_categories[0].name)}`}>
+            <div className="flex flex-col">
+                <Link className="text-neutral-900 hover:underline hover:text-neutral-900" to={generateJobUrl(job.id)}>
+                    <h2 className='text-lg font-bold tracking-tight truncate-2-lines' title={job.fields.title}>{job.fields.title}</h2>
+                </Link>
+            </div>
+
+            <div>
+                <span className={`px-4 py-1 text-center text-xs font-medium rounded ${getCategoryColor(job.fields.career_categories && job.fields.career_categories[0].name)}`}>
                 {job.fields.career_categories && job.fields.career_categories[0].name}
-            </p>
-            <p className='text-xs font-bold text-neutral-900'>Organization</p>
-            
-            {/* <p className='text-md font-medium mb-2 text-gray-600'><IoBusinessSharp className='inline-block mr-1'/>{job.fields.source && job.fields.source[0].name}</p> */}
-            <p className='text-md text-neutral-900 font-regular mb-2'>{job.fields.source && job.fields.source[0].name}</p>
+                </span>
+            </div>
 
-            <p className='text-xs font-bold text-neutral-900'>Region</p>
-            {/* <p className='text-md font-medium text-gray-600 mb-8'><IoLocationSharp className='inline-block mr-1'/>{job.fields.country && job.fields.country[0].name}</p> */}
-            <p className='text-md font-regular text-neutral-900 mb-8'>{job.fields.country && job.fields.country[0].name ? `${getCountryFlag(job.fields.country && job.fields.country[0].name)} ${job.fields.country[0].name}` : "Unknown"}</p>
+            <div>
+                <label className='text-xs font-bold text-neutral-900'>Organization</label>
+                <p className='text-md text-neutral-900 font-regular'>{job.fields.source && job.fields.source[0].name}</p>
+            </div>
+
+            <div>
+            <label className='text-xs font-bold text-neutral-900'>Region</label>
+            <p className='text-md font-regular text-neutral-900'>{job.fields.country && job.fields.country[0].name ? `${getCountryFlag(job.fields.country && job.fields.country[0].name)} ${job.fields.country[0].name}` : "Unknown"}</p>
+            </div> 
 
 
-            <div className='flex flex-row gap-2 bottom-0'>
-                <div className='basis-1/2'>
+            <div>
                 <Link to={generateJobUrl(job.id)}>
                     <button className='w-full bg-rose-600 rounded border-2 border-rose-600 text-white px-8 py-2'>View Details</button>
                 </Link>
-                </div>
-                <div className='basis-1/2'>
-                {/* <Link>
-                    <button className='w-full basis-1/2 bg-neutral-100 rounded border-2 border-neutral-100 text-neutral-900 px-8 py-2'>Save</button>
-                </Link> */}
-                </div>
             </div>
         </div>
     );

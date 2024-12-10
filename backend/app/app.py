@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import secrets
 from flask_cors import CORS, cross_origin
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -18,6 +19,23 @@ if not openai_api_key:
 
 client = OpenAI(api_key=openai_api_key)
 
+# Load your custom API key (for protecting the API)
+master_key = os.getenv("MASTER_KEY")
+if not master_key:
+    raise ValueError("MASTER_KEY environment variable is not set")
+
+# The protected API key required for normal /summarize usage
+required_api_key = os.getenv('API_KEY')
+
+def verify_api_key():
+    provided_key = request.headers.get('x-api-key') or request.args.get('api_key')
+    return provided_key == required_api_key
+
+def verify_master_key():
+    # This is for the admin endpoint that creates new API keys
+    provided_master_key = request.headers.get('x-master-key') or request.args.get('master_key')
+    return provided_master_key == master_key
+
 # Health Check Endpoint
 @app.route('/health', methods=['GET'])
 def health_check():
@@ -34,6 +52,10 @@ def count_tokens(model, messages):
 
 @app.route('/summarize', methods=['POST'])
 def summarize():
+    # Verify API key (for normal API usage)
+    if not verify_api_key():
+        return jsonify({'error': 'Unauthorized'}), 401
+
     data = request.json
     job_description = data.get('jobDescription', '')
     # print(data)

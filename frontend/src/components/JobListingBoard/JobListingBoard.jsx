@@ -9,7 +9,7 @@ function JobListingBoard({ filteredJobs, getCountryFlag, jobTypes, onSelectJobTy
   console.log("Filtered jobs: " + filteredJobs)
     
   return (
-    <div className='job-container bg-gray-50 py-8 px-16'>
+    <div className='job-container bg-gray-100 py-8 px-16'>
 
       {/* <CountryList countries={countries} onSelectCountry={handleCountrySelect} getCountryFlag={getCountryFlag}/> */}
       <JobTypeFilter jobTypes={jobTypes} onSelectJobType={onSelectJobType} />
@@ -22,7 +22,7 @@ function JobListingBoard({ filteredJobs, getCountryFlag, jobTypes, onSelectJobTy
           </div>
 
         ) : (
-          <div className="job-list grid md:grid-cols-3 sm:grid-cols-1">
+          <div className="job-list flex flex-col">
             {filteredJobs.map(job => 
             <JobCard key={job.id} job={job} getCountryFlag={getCountryFlag} />
             )}

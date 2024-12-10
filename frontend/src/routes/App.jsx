@@ -217,7 +217,7 @@ function App() {
 
       <div className="app text-neutral-900">
         <Helmet>
-            <title>ImpactCareers | Careers & Volunteering in Health, Climate, International Development</title>
+            <title>ImpactCareers | Opportunities in Health, Climate, International Development</title>
             <meta name="description" content="Discover a diverse range of career, job, and volunteer opportunities in the health, climate change, and international development sectors. Connect with impactful positions globally and advance your career while contributing to significant causes. Explore our updated listings to find roles that match your skills and passions." />
             {/* Open Graph */}
             <meta property="og:title" content="Global Opportunities Board | Careers & Volunteering in Health, Climate, International Development" />
@@ -260,11 +260,11 @@ function App() {
 
             {/* JOB LIST */}
 
-            <div className='flex flex-col w-full bg-gray-50 pt-8 px-16'>
+            <div className='flex flex-col w-full bg-neutral-100 pt-8 px-16'>
 
-                <h2 className='text-center text-2xl text-gray-900 font-bold'>Latest Jobs Around the World</h2>
+                <h2 className='text-center text-2xl text-gray-900 font-bold'>Latest Opportunities Around the World</h2>
 
-                <p className='text-center text-lg mb-4'>Browse the latest opportunities from around the globe</p>
+                <p className='text-center text-lg mb-4'>Browse the latest from around the globe</p>
                 
                 <div className='flex justify-center'>
                     <CountryList 
@@ -274,7 +274,7 @@ function App() {
                         maxCountries={15}
                     />
                 </div>
-                <Link className='text-center mt-4 text-rose-600' to="/jobs">View All Countries</Link>
+                <Link className='text-center mt-4 mb-4 text-rose-600' to="/jobs">View All Countries</Link>
             </div>
 
 

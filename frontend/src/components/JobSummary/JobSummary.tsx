@@ -6,7 +6,7 @@ function JobSummary({ jobDescription }) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        console.log("env:", process.env.REACT_APP_BACKEND_URL)
+
         if (jobDescription) {
             // Check if a summary is already saved in localStorage
             const cachedSummary = localStorage.getItem(jobDescription);
@@ -26,6 +26,7 @@ function JobSummary({ jobDescription }) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    'x-api-key': 'your-secret-key'
                 },
                 body: JSON.stringify({ jobDescription: description }),
             });
