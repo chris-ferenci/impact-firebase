@@ -7,6 +7,7 @@ import './JobDetails.css';
 import Header from '../Header/Header';
 import JobSummary from '../JobSummary/JobSummary';
 import { IoChevronBack } from "react-icons/io5"
+import countryFlags from '../../data/countryFlags.json'
 
 function JobDetails() {
 
@@ -18,6 +19,10 @@ function JobDetails() {
     const handleBackClick = () => {
         navigate(-1);
     };
+
+    const getCountryFlag = (countryName) => {
+        return countryFlags[countryName] || ""; // This will return the flag emoji or an empty string if not found
+    }
 
     useEffect(() => {
 
@@ -69,7 +74,7 @@ function JobDetails() {
 
     function formatDateTime(isoString) {
         const date = new Date(isoString);
-        return date.toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' });
+        return date.toLocaleString('en-US', { dateStyle: 'long'});
       }
 
     const customParserOptions = {
@@ -84,92 +89,74 @@ function JobDetails() {
     return (
         <>
         {data.map((data) => (
-            <div className="job-details flex flex-row w-full">
-                <div className='w-2/3 flex flex-col text-neutral-900 bg-white'>
-                    <div key={data.id}>
-                        <div className='p-8'>
-                            <button className='bg-white mb-8 p-2 rounded font-bold text-lg flex flex-row text-gray-900 items-center hover:text-rose-600' onClick={handleBackClick}><i className="align-middle"><IoChevronBack /></i>Back</button>
-                            <h1 className='capitalize font-bold text-4xl tracking-tight text-neutral-900 mb-4'>{data.fields.title}</h1>                        
+            <div className="job-details w-full ">
+                <div key={data.id}>
+                    <div className='flex flex-col md:w-2/3 md:grid md:grid-rows-3 md:grid-flow-col text-neutral-900'>
+                        {/* Section 1 - Title and Region */}
+                        <div className='flex flex-col md:col-span-2 p-8'>
+
+                            <button className='bg-white mb-8 rounded font-bold text-lg flex flex-row text-gray-900 items-center hover:text-rose-600' onClick={handleBackClick}><i className="align-middle"><IoChevronBack /></i>Back</button>
                             
-                            <div className='flex flex-row gap-8 p-4 rounded-md bg-gray-100 mb-8' key={data.id}>
+                            <div className='mb-4'>
+                                <p className='text-xl'>{data.fields.source && data.fields.source[0].name}</p>
+                                <h1 className='capitalize font-bold text-4xl tracking-tight text-neutral-900 mb-4'>
+                                    {data.fields.title}
+                                </h1>      
+                            </div>                  
+                            
+                            <div className='flex flex-row gap-8 mb-4' key={data.id}>
                                 <div className='flex flex-col'>
-                                <h2 className='font-medium text-gray-700'>Region</h2><p>{data.fields.country && data.fields.country[0].name}</p>
+                                    <h2 className='font-bold text-neutral-900'>Region</h2>
+                                    
+                                    <div className='flex flex-row'>
+                                        <span className='mr-2'>{getCountryFlag(data.fields.country && data.fields.country[0].name)}</span>
+                                        <p>{data.fields.country && data.fields.country[0].name}</p>
+                                    </div>
                                 </div>
 
                                 <div className='flex flex-col'>
-                                <h2 className='font-medium text-gray-700'>Source</h2><p>{data.fields.source && data.fields.source[0].name}</p>
-                                </div>
-
-                                <div className='flex flex-col'>
-                                <h2 className='font-medium text-gray-700'>Closing Date</h2><p>{formatDateTime(data.fields.date && data.fields.date.closing)}</p>
+                                    <h2 className='font-bold text-gray-900'>Closing Date</h2>
+                                    <p>{formatDateTime(data.fields.date && data.fields.date.closing)}</p>
                                 </div>
                             </div>
 
-                            <a className='font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white hover:text-white' href={data.fields.url} target="_blank" rel="noreferrer">Apply</a>
+                            {/* Section 2 - AI Summary */}
+                            <div className='text-neutral-900 md:row-span-3'>
+                                <div className='flex flex-col'>
+                                    <div className='flex flex-col'>
+                                        <h2 className="text-lg font-bold">AI Summary</h2>
+                                        <p className='text-sm text-neutral-600 italic mb-2'>Summarized by OpenAI</p>
+                                    </div>
+
+                                    <div className='bg-white text-lg p-4 rounded-md border-2 border-rose-200'>
+                                        <JobSummary jobDescription={data.fields['body-html']} />
+                                    </div>
+                                </div>
+                            </div>      
+
+                            {/* Section 3 - Description */}
+
+                            <div className='md:pb-32'>
+                                <h2 className='text-xl text-neutral-900 font-semibold py-2'>Full Job Description</h2>
+                                
+                                <div className='body-html text-lg text-neutral-900 mb-4 leading-relaxed '>
+                                    {parser(data.fields['body-html'], customParserOptions)}
+                                </div>
+                            </div>
+
                         </div>
 
-                        <div className='px-8'>
-                            <h2 className='mb-4 text-lg text-neutral-500 font-semibold border-b-2 border-t-2 py-2 border-neutral-300'>Job Description</h2>
-                            {/* Job Summary Component */}
-                            
-                            <div className='body-html text-md mb-4 leading-relaxed '>{parser(data.fields['body-html'], customParserOptions)}</div>
-                        
-                            <a className='font-bold bg-rose-600 text-white px-16 py-2 rounded hover:bg-rose-800 hover:text-white' href={data.fields.url} target="_blank" rel="noreferrer">Apply</a>
-                        </div>
-
+                                          
+    
                     </div>
+                    
+
+                    {/* Footer */}
+                    <div className='md:hidden flex w-full p-4 fixed bottom-0 bg-white justify-end border-t-4 border-rose-600'>
+                        <a className='font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white hover:text-white' href={data.fields.url} target="_blank" rel="noreferrer">Apply</a>
+                    </div>
+
                 </div>
-
-                <div className='flex-shrink-0 h-screen w-1/3 text-neutral-900'>
-                    <div className='bg-gray-50 h-screen p-4 fixed flex flex-col'>
-                        <div className='flex justify-between items-center'>
-                        <h2 className="mb-4 text-lg font-bold italic">ImpactAI Facts</h2>
-                        <p className='text-sm text-neutral-500 font-medium italic'>Generated by AI</p>
-                        </div>
-
-                        <div className='bg-white p-4 rounded-md'>
-                            <h2 className="mb-4 font-bold italic">Summary</h2>
-                            <JobSummary jobDescription={data.fields['body-html']} />
-                        </div>
-
-                        <p className='my-4 text-sm text-neutral-600 font-semibold italic'>Ask About the Role</p>
-
-                        <div className='flex flex-row flex-wrap gap-2 font-semibold'>
-                            <a className=' 
-                            bg-rose-50 
-                            border-rose-200
-                            border
-                            text-rose-800 px-4 py-2 
-                            rounded 
-                            hover:bg-rose-200 
-                            hover:text-rose-800 
-                            cursor-pointer' 
-                            >Salary</a>
-                        
-                            <a className='
-                            bg-rose-50 
-                            border-rose-200
-                            border
-                            text-rose-800 px-4 py-2 
-                            rounded 
-                            hover:bg-rose-200 
-                            hover:text-rose-800 cursor-pointer ' 
-                            >Education Requirements</a>
-                        
-                            <a className='
-                            bg-rose-50 
-                            border-rose-200
-                            border
-                            text-rose-800 px-4 py-2 
-                            rounded 
-                            hover:bg-rose-200 
-                            hover:text-rose-800 cursor-pointer ' 
-                            >Experience</a>
-                        </div>
-
-                        
-                    </div>
-                </div>3
 
             </div>
             ))}

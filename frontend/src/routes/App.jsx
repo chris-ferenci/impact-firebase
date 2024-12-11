@@ -237,12 +237,12 @@ function App() {
         <div>
             <div className='flex flex-col md:flex-row w-full bg-white'>
 
-                <div className="w-full md:w-1/2 flex flex-col px-16 py-16">
-                    <h1 className='text-6xl text-left font-bold mb-8 leading-tighter tracking-tight'>Work opportunities that <span className='text-rose-600'>make an impact</span></h1>
+                <div className="w-full md:w-1/2 flex flex-col flex-wrap px-8 py-8 md:px-16 md:py-16">
+                    <h1 className='text-5xl md:text-6xl text-left font-bold mb-8 leading-tighter tracking-tight'>Make your <span className='text-rose-600'>Impact</span></h1>
                     <h2 className='text-2xl text-left font-regular mb-8 leading-tight'>Explore leading job and volunteer opportunities in health, climate sustainability, and international development.</h2>
                     
                     {/* <CategoryList categories={categories} onSelectCategory={handleCategorySelect} /> */}
-
+                    <p className='text-neutral-800 font-bold'>Browse Latest Regions</p>
                     <CountryList countries={countries} onSelectCountry={handleCountrySelect} getCountryFlag={getCountryFlag} maxCountries={6}/>
                 </div>
 
@@ -260,7 +260,7 @@ function App() {
 
             {/* JOB LIST */}
 
-            <div className='flex flex-col w-full bg-neutral-100 pt-8 px-16'>
+            <div className='flex flex-col w-full bg-neutral-100 pt-8 px-8 md:px-16'>
 
                 <h2 className='text-center text-2xl text-gray-900 font-bold'>Latest Opportunities Around the World</h2>
 
@@ -271,7 +271,7 @@ function App() {
                         countries={countries} 
                         onSelectCountry={handleCountrySelect} 
                         getCountryFlag={getCountryFlag} 
-                        maxCountries={15}
+                        maxCountries={5}
                     />
                 </div>
                 <Link className='text-center mt-4 mb-4 text-rose-600' to="/jobs">View All Countries</Link>

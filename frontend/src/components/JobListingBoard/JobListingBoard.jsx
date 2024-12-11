@@ -9,7 +9,7 @@ function JobListingBoard({ filteredJobs, getCountryFlag, jobTypes, onSelectJobTy
   console.log("Filtered jobs: " + filteredJobs)
     
   return (
-    <div className='job-container bg-gray-100 py-8 px-16'>
+    <div className='job-container bg-gray-100 py-8 px-4 md:px-16'>
 
       {/* <CountryList countries={countries} onSelectCountry={handleCountrySelect} getCountryFlag={getCountryFlag}/> */}
       <JobTypeFilter jobTypes={jobTypes} onSelectJobType={onSelectJobType} />
