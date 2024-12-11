@@ -6,13 +6,16 @@ import parser, { domToReact, attributesToProps } from 'html-react-parser';
 import './JobDetails.css';
 import Header from '../Header/Header';
 import JobSummary from '../JobSummary/JobSummary';
-import { IoChevronBack } from "react-icons/io5"
+import { IoChevronBack, IoChevronDown, IoChevronUp } from "react-icons/io5";
 import countryFlags from '../../data/countryFlags.json'
 
 function JobDetails() {
 
     const { id } = useParams();
     const [data, setData] = useState([]);
+
+    const [isFooterOpen, setIsFooterOpen] = useState(true);
+    const toggleFooter = () => setIsFooterOpen(!isFooterOpen);
 
     const navigate = useNavigate();
 
@@ -88,77 +91,85 @@ function JobDetails() {
 
     return (
         <>
-        {data.map((data) => (
-            <div className="job-details w-full ">
-                <div key={data.id}>
-                    <div className='flex flex-col md:w-2/3 md:grid md:grid-rows-3 md:grid-flow-col text-neutral-900'>
-                        {/* Section 1 - Title and Region */}
-                        <div className='flex flex-col md:col-span-2 p-8'>
+            {data.map((job) => (
+                <div className="job-details w-full text-neutral-900" key={job.id}>
+                    <div className="md:grid md:grid-cols-3 md:gap-8 p-8">
+                        
+                        {/* Left Column */}
+                        <div className="md:col-span-2">
+                            <button
+                                className="bg-white mb-8 rounded font-bold text-lg flex items-center text-gray-900 hover:text-rose-600"
+                                onClick={() => window.history.back()}
+                            >
+                                <IoChevronBack className="mr-2" /> Back
+                            </button>
 
-                            <button className='bg-white mb-8 rounded font-bold text-lg flex flex-row text-gray-900 items-center hover:text-rose-600' onClick={handleBackClick}><i className="align-middle"><IoChevronBack /></i>Back</button>
-                            
-                            <div className='mb-4'>
-                                <p className='text-xl'>{data.fields.source && data.fields.source[0].name}</p>
-                                <h1 className='capitalize font-bold text-4xl tracking-tight text-neutral-900 mb-4'>
-                                    {data.fields.title}
-                                </h1>      
-                            </div>                  
-                            
-                            <div className='flex flex-row gap-8 mb-4' key={data.id}>
-                                <div className='flex flex-col'>
-                                    <h2 className='font-bold text-neutral-900'>Region</h2>
-                                    
-                                    <div className='flex flex-row'>
-                                        <span className='mr-2'>{getCountryFlag(data.fields.country && data.fields.country[0].name)}</span>
-                                        <p>{data.fields.country && data.fields.country[0].name}</p>
-                                    </div>
+                            <p className='text-xl'>{job.fields.source && job.fields.source[0].name}</p>
+                            <h1 className="font-bold text-4xl text-neutral-900 mb-4 capitalize">
+                                {job.fields.title}
+                            </h1>
+
+                            <div className="flex gap-8 mb-4">
+                                <div>
+                                    <h2 className="font-bold">Region</h2>
+                                    <p>{job.fields.country[0].name}</p>
                                 </div>
 
-                                <div className='flex flex-col'>
-                                    <h2 className='font-bold text-gray-900'>Closing Date</h2>
-                                    <p>{formatDateTime(data.fields.date && data.fields.date.closing)}</p>
+                                <div>
+                                    <h2 className="font-bold">Closing Date</h2>
+                                    <p>{new Date(job.fields.date.closing).toLocaleDateString()}</p>
                                 </div>
                             </div>
 
-                            {/* Section 2 - AI Summary */}
-                            <div className='text-neutral-900 md:row-span-3'>
-                                <div className='flex flex-col'>
-                                    <div className='flex flex-col'>
-                                        <h2 className="text-lg font-bold">AI Summary</h2>
-                                        <p className='text-sm text-neutral-600 italic mb-2'>Summarized by OpenAI</p>
-                                    </div>
-
-                                    <div className='bg-white text-lg p-4 rounded-md border-2 border-rose-200'>
-                                        <JobSummary jobDescription={data.fields['body-html']} />
-                                    </div>
-                                </div>
-                            </div>      
-
-                            {/* Section 3 - Description */}
-
-                            <div className='md:pb-32'>
-                                <h2 className='text-xl text-neutral-900 font-semibold py-2'>Full Job Description</h2>
-                                
-                                <div className='body-html text-lg text-neutral-900 mb-4 leading-relaxed '>
-                                    {parser(data.fields['body-html'], customParserOptions)}
-                                </div>
-                            </div>
-
+                            <h2 className="text-xl font-semibold py-2">Full Job Description</h2>
+                            <div
+                                className="text-lg leading-relaxed"
+                                dangerouslySetInnerHTML={{ __html: job.fields['body-html'] }}
+                            />
                         </div>
 
-                                          
-    
+                        {/* Right Column for Larger Screens */}
+                        <div className="hidden md:block md:col-span-1">
+                            <div className="bg-white p-6 border-2 border-rose-200 rounded-md">
+                                <h2 className="text-lg font-bold">AI Summary</h2>
+                                <p className="text-sm italic text-neutral-600 mb-2">
+                                    Summarized by OpenAI
+                                </p>
+                                <JobSummary jobDescription={job.fields['body-html']} />
+                            </div>
+                        </div>
                     </div>
-                    
 
-                    {/* Footer */}
-                    <div className='md:hidden flex w-full p-4 fixed bottom-0 bg-white justify-end border-t-4 border-rose-600'>
-                        <a className='font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white hover:text-white' href={data.fields.url} target="_blank" rel="noreferrer">Apply</a>
+                    {/* Sticky Footer for Small Screens */}
+                    <div className="md:hidden fixed bottom-0 w-full bg-white border-t-4 border-rose-600">
+                        <button
+                            className="flex justify-between items-center w-full p-4 text-left font-bold"
+                            onClick={toggleFooter}
+                        >
+                            <span className="text-rose-600">AI Summary</span>
+                            {isFooterOpen ? (
+                                <IoChevronDown className="w-6 h-6 text-rose-600" />
+                            ) : (
+                                <IoChevronUp className="w-6 h-6 text-rose-600" />
+                            )}
+                        </button>
+
+                        {isFooterOpen && (
+                            <div className="p-4 border-t-2 border-rose-200">
+                                <JobSummary jobDescription={job.fields['body-html']} />
+                            </div>
+                        )}
+
+                        <a
+                            className="block text-center font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white"
+                            href={job.fields.url}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            Apply Now
+                        </a>
                     </div>
-
                 </div>
-
-            </div>
             ))}
         </>
     );
