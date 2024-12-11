@@ -93,10 +93,10 @@ function JobDetails() {
         <>
             {data.map((job) => (
                 <div className="job-details w-full text-neutral-900" key={job.id}>
-                    <div className="md:grid md:grid-cols-3 md:gap-8 p-8">
+                    <div className="md:grid md:grid-cols-3 md:gap-8">
                         
                         {/* Left Column */}
-                        <div className="md:col-span-2">
+                        <div className="md:col-span-2 md:overflow-y-auto md:h-screen p-8 md:p-16">
                             <button
                                 className="bg-white mb-8 rounded font-bold text-lg flex items-center text-gray-900 hover:text-rose-600"
                                 onClick={() => window.history.back()}
@@ -129,7 +129,7 @@ function JobDetails() {
                         </div>
 
                         {/* Right Column for Larger Screens */}
-                        <div className="hidden md:block md:col-span-1">
+                        <div className="hidden md:block md:col-span-1 d:sticky md:top-0 md:h-screen px-8 md:pt-16">
                             <div className="bg-white p-6 border-2 border-rose-200 rounded-md">
                                 <h2 className="text-lg font-bold">AI Summary</h2>
                                 <p className="text-sm italic text-neutral-600 mb-2">
@@ -137,6 +137,16 @@ function JobDetails() {
                                 </p>
                                 <JobSummary jobDescription={job.fields['body-html']} />
                             </div>
+
+                            <a
+                            className="block mt-8 text-center font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white"
+                            href={job.fields.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            >
+                            Apply Now
+                            </a>
+
                         </div>
                     </div>
 
