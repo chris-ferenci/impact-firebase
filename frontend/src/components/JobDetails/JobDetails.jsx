@@ -131,7 +131,10 @@ function JobDetails() {
                         {/* Right Column for Larger Screens */}
                         <div className="hidden md:block md:col-span-1 d:sticky md:top-0 md:h-screen px-8 md:pt-16">
                             <div className="bg-white p-6 border-2 border-rose-200 rounded-md">
-                                <h2 className="text-lg font-bold">AI Summary</h2>
+                                <div className='flex flex-row items-center'>
+                                    <h2 className="text-lg font-bold">Impact Intelligence</h2>
+                                    <p className='ml-2 font-semibold text-neutral-500 text-xs'>BETA</p>
+                                </div>
                                 <p className="text-sm italic text-neutral-600 mb-2">
                                     Summarized by OpenAI
                                 </p>
@@ -153,10 +156,13 @@ function JobDetails() {
                     {/* Sticky Footer for Small Screens */}
                     <div className="md:hidden fixed bottom-0 w-full bg-white border-t-4 border-rose-600">
                         <button
-                            className="flex justify-between items-center w-full p-4 text-left font-bold"
+                            className="flex justify-between items-center w-full p-4 text-left"
                             onClick={toggleFooter}
                         >
-                            <span className="text-rose-600">AI Summary</span>
+                            <div className='flex flex-row items-center'>
+                                <span className="text-rose-600 font-bold">Impact Intelligence</span>
+                                <span className='ml-2 font-semibold text-xs text-neutral-500'>BETA</span>
+                            </div>
                             {isFooterOpen ? (
                                 <IoChevronDown className="w-6 h-6 text-rose-600" />
                             ) : (

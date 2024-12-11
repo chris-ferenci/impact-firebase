@@ -88,7 +88,7 @@ function JobCard({ job, getCountryFlag }) {
 
             {/* View Details Button */}
 
-            <div className='flex col-span-4 md:col-span-1 justify-end'>
+            <div className='flex col-span-1 md:col-span-1 justify-end'>
                 <Link to={generateJobUrl(job.id)}>
                     <button className='bg-rose-600 hover:bg-rose-800 rounded  text-white px-4 py-2'>View Details</button>
                 </Link>
