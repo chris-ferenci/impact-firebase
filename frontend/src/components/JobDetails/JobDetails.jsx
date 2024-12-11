@@ -112,19 +112,19 @@ function JobDetails() {
                             <div className="flex gap-8 mb-4">
                                 <div>
                                     <h2 className="font-bold">Region</h2>
-                                    <p>{job.fields.country[0].name}</p>
+                                    <p>{job.fields.country?.[0]?.name || "Unknown"}</p>
                                 </div>
 
                                 <div>
                                     <h2 className="font-bold">Closing Date</h2>
-                                    <p>{new Date(job.fields.date.closing).toLocaleDateString()}</p>
+                                    <p>{new Date(job.fields.date?.closing ? new Date(job.fields.date.closing).toLocaleDateString() : "N/A").toLocaleDateString()}</p>
                                 </div>
                             </div>
 
                             <h2 className="text-xl font-semibold py-2">Full Job Description</h2>
                             <div
                                 className="text-lg leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: job.fields['body-html'] }}
+                                dangerouslySetInnerHTML={{ __html: job.fields['body-html'] || "<p>No description available.</p>" }} // Safe Fallback
                             />
                         </div>
 
@@ -147,7 +147,7 @@ function JobDetails() {
                             target="_blank"
                             rel="noreferrer"
                             >
-                            Apply Now
+                            Apply
                             </a>
 
                         </div>
@@ -177,12 +177,12 @@ function JobDetails() {
                         )}
 
                         <a
-                            className="block text-center font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white"
+                            className="block text-center font-bold bg-rose-600 px-8 py-4 hover:bg-rose-800 text-white hover:text-white"
                             href={job.fields.url}
                             target="_blank"
                             rel="noreferrer"
                         >
-                            Apply Now
+                            Apply
                         </a>
                     </div>
                 </div>

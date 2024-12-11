@@ -44,7 +44,19 @@ function JobSummary({ jobDescription }) {
         setLoading(false);
     };
 
-    if (loading) return <p>Loading summary...</p>;
+    if (loading) {
+        return (
+            <div className="relative p-4 w-48 mx-auto text-center">
+                <div className="flex justify-center items-center gap-1">
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-75"></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-150"></div>
+                </div>
+            </div>
+        );
+    }
+
+
     if (error) return <p>Error: {error}</p>;
 
     return <p>{summary}</p>;
