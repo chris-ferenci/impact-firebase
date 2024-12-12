@@ -103,25 +103,28 @@ function JobDetails() {
                             >
                                 <IoChevronBack className="mr-2" /> Back
                             </button>
+                            
+                            <div className='md:border-l-4 md:border-rose-500 md:pl-4'>
+                                <p className='text-xl'>{job.fields.source && job.fields.source[0].name}</p>
+                                <h1 className="font-bold text-4xl text-neutral-900 mb-4 capitalize">
+                                    {job.fields.title}
+                                </h1>
+                            
 
-                            <p className='text-xl'>{job.fields.source && job.fields.source[0].name}</p>
-                            <h1 className="font-bold text-4xl text-neutral-900 mb-4 capitalize">
-                                {job.fields.title}
-                            </h1>
+                                <div className="flex gap-8 mb-4">
+                                    <div>
+                                        <h2 className="font-bold">Region</h2>
+                                        <p>{job.fields.country?.[0]?.name || "Unknown"}</p>
+                                    </div>
 
-                            <div className="flex gap-8 mb-4">
-                                <div>
-                                    <h2 className="font-bold">Region</h2>
-                                    <p>{job.fields.country?.[0]?.name || "Unknown"}</p>
-                                </div>
-
-                                <div>
-                                    <h2 className="font-bold">Closing Date</h2>
-                                    <p>{new Date(job.fields.date?.closing ? new Date(job.fields.date.closing).toLocaleDateString() : "N/A").toLocaleDateString()}</p>
+                                    <div>
+                                        <h2 className="font-bold">Closing Date</h2>
+                                        <p>{new Date(job.fields.date?.closing ? new Date(job.fields.date.closing).toLocaleDateString() : "N/A").toLocaleDateString()}</p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <h2 className="text-xl font-semibold py-2">Full Job Description</h2>
+                            <h2 className="text-lg font-semibold py-2 mt-8 mb-2 text-neutral-700"><span className='border-b-2 border-rose-500 pb-1'>Description</span></h2>
                             <div
                                 className="text-lg leading-relaxed"
                                 dangerouslySetInnerHTML={{ __html: job.fields['body-html'] || "<p>No description available.</p>" }} // Safe Fallback

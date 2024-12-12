@@ -74,7 +74,7 @@ function JobCard({ job, getCountryFlag }) {
 
             <div className="flex flex-col justify-center">
                 <label className='text-xs font-bold text-neutral-900'>Region</label>
-                <p className='text-md font-regular text-neutral-900'>{job.fields.country && job.fields.country[0].name ? `${getCountryFlag(job.fields.country && job.fields.country[0].name)} ${job.fields.country[0].name}` : "Unknown"}</p>
+                <p className='text-md font-regular text-neutral-900'>{job.fields.country && job.fields.country[0].name ? `${getCountryFlag(job.fields.country && job.fields.country[0].name)} ${job.fields.country[0].name}` : <span className='text-neutral-500'>🌍 Not Provided</span>}</p>
             </div> 
 
             {/* Category Tag */}

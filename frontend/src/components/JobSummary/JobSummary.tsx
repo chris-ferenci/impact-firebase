@@ -4,6 +4,7 @@ function JobSummary({ jobDescription }) {
     const [summary, setSummary] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [dots, setDots] = useState(""); // For animated dots
 
     useEffect(() => {
 
@@ -17,6 +18,16 @@ function JobSummary({ jobDescription }) {
             }
         }
     }, [jobDescription]);
+
+    useEffect(() => {
+        // Animate dots
+        if (loading) {
+            const interval = setInterval(() => {
+                setDots((prev) => (prev.length < 3 ? prev + "." : ""));
+            }, 500);
+            return () => clearInterval(interval);
+        }
+    }, [loading]);
 
     const fetchSummary = async (description) => {
         setLoading(true);
@@ -46,12 +57,8 @@ function JobSummary({ jobDescription }) {
 
     if (loading) {
         return (
-            <div className="relative p-4 w-48 mx-auto text-center">
-                <div className="flex justify-center items-center gap-1">
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-75"></div>
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-150"></div>
-                </div>
+            <div className="text-sm text-neutral-600">
+                Summarizing<span>{dots}</span>
             </div>
         );
     }
