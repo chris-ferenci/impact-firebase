@@ -230,7 +230,6 @@ function App() {
             </div>
 
             <div className='flex flex-row w-full bg-neutral-900 px-4 py-4 justify-center'>
-                {/* <CountryList countries={countries} onSelectCountry={handleCountrySelect} getCountryFlag={getCountryFlag}/> */}
                 <Search  />
             </div>
 
@@ -251,7 +250,7 @@ function App() {
                         maxCountries={5}
                     />
                 </div>
-                <Link className='text-center mt-4 mb-4 text-rose-600' to="/jobs">View All Countries</Link>
+                {/* <Link className='text-center mt-4 mb-4 text-rose-600' to="/jobs">View All Countries</Link> */}
             </div>
 
 
@@ -268,7 +267,7 @@ function App() {
 
         </div>
 
-        <div className='flex w-full bg-gray-50 justify-center pb-8'>
+        <div className='flex w-full bg-gray-100 justify-center pb-8'>
             <button
                 onClick={loadMoreJobs}
                 disabled={isMoreLoading}
