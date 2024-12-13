@@ -3,6 +3,8 @@ import JobCard from '../JobCard/JobCard';
 import JobTypeFilter from '../JobTypeFilter/JobTypeFilter';
 import Spinner from '../Spinner/Spinner';
 import CountryList from '../CountryList/CountryList';
+import JobsPerPageSelect from '../JobsPerPageSelect/JobsPerPageSelect';
+
 
 function JobListingBoard({ filteredJobs, getCountryFlag, jobTypes, onSelectJobType, isLoading }) {
 
@@ -12,7 +14,7 @@ function JobListingBoard({ filteredJobs, getCountryFlag, jobTypes, onSelectJobTy
     <div className='job-container bg-gray-100 py-8 px-8 md:px-48'>
 
       {/* <CountryList countries={countries} onSelectCountry={handleCountrySelect} getCountryFlag={getCountryFlag}/> */}
-      <JobTypeFilter jobTypes={jobTypes} onSelectJobType={onSelectJobType} />
+      {/* <JobTypeFilter jobTypes={jobTypes} onSelectJobType={onSelectJobType} /> */}
 
       
         {isLoading ? (

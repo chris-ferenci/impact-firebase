@@ -9,8 +9,6 @@ import '../App.css';
 
 import Header from '../components/Header/Header';
 import Search from '../components/Search/Search';
-import JobCard from '../components/JobCard/JobCard';
-import JobDetails from '../components/JobDetails/JobDetails';
 import CountryList from '../components/CountryList/CountryList';
 import CategoryList from '../components/CategoryList/CategoryList';
 import heroImg from '../assets/img/hero-img-1.jpg';
@@ -165,28 +163,6 @@ function App() {
         }
       };
 
-      const fetchJobType = async (jobType = '') => {
-        const params = {
-            facets: [
-                {
-                    field: "type.name"
-                }
-            ],
-            limit: 0,
-            filter: {
-                field: 'type.name',
-                value: jobType
-            }
-        };
-
-        try {
-            const response = await axios.get(`https://api.reliefweb.int/v1/jobs?appname=${username}`, { params });
-            setJobTypes(response.data.embedded.facets['type.name'].data);
-        } catch (error) {
-            console.error("Failed to fetch job types:", error);
-        }
-    };
-
 
     useEffect(() => {
         fetchJobs();
@@ -211,6 +187,9 @@ function App() {
             setCountries(data.embedded.facets['country.name'].data);
         });
     }, []);
+
+
+    
 
     return (
     <HelmetProvider context={helmetContext}>

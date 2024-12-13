@@ -5,7 +5,7 @@ function CountryList({ onSelectJobType, jobTypes }) {
     console.log(jobTypes.embedded)
     return (
         <div className="w-full country-list">
-            {/* <h3 className='text-lg mb-4 font-semibold text-center'>Browse by type</h3>
+            <h3 className='text-lg mb-4 font-semibold text-center'>Browse by type</h3>
             <ul className="list-none flex flex-wrap place-content-center">
                 {jobTypes.map(jobType => (
                     <li className="mr-2 mb-2 mt-2" key={jobType.value}>
@@ -17,7 +17,7 @@ function CountryList({ onSelectJobType, jobTypes }) {
                         </button>
                     </li>
                 ))}
-            </ul> */}
+            </ul>
         </div>
     );
 }
