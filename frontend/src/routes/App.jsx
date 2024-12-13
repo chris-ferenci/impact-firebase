@@ -164,6 +164,7 @@ function App() {
       };
 
 
+
     useEffect(() => {
         fetchJobs();
         // Fetching countries
@@ -187,9 +188,6 @@ function App() {
             setCountries(data.embedded.facets['country.name'].data);
         });
     }, []);
-
-
-    
 
     return (
     <HelmetProvider context={helmetContext}>
