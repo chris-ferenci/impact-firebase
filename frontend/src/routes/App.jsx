@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -69,64 +69,59 @@ function App() {
     //     fetchJobs(category);
     // };
 
-    const filteredJobs = data.filter(job => 
-      job.fields.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (!selectedCountry || (job.fields.country && job.fields.country[0].name === selectedCountry)) &&
-      (!selectedJobType || (job.fields.type && job.fields.type[0].name === selectedJobType))
-    );
+    const filteredJobs = useMemo(
+        () =>
+          data.filter(
+            (job) =>
+              job.fields.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+              (!selectedCountry ||
+                (job.fields.country && job.fields.country[0].name === selectedCountry)) &&
+              (!selectedJobType ||
+                (job.fields.type && job.fields.type[0].name === selectedJobType))
+          ),
+        [data, searchTerm, selectedCountry, selectedJobType]
+      );
 
-    const loadMoreJobs = () => {
-        setOffset(prevOffset => {
-            const newOffset = prevOffset + 9;
-            setIsMoreLoading(true); // Set loading more to true
-            fetchJobs(newOffset, true); // Pass newOffset directly to the fetch function
-            return newOffset;
-        });
-    };
+      const loadMoreJobs = async () => {
+        const newOffset = offset + 9;
+        setOffset(newOffset); // Update state first
+        await fetchJobs(newOffset, true); // Use updated offset
+      };
 
     // Fetching jobs
 
-    const fetchJobs = async (newOffset = offset, isMore = false) => {
-
-        if (!isMore) setIsLoading(true);
-        else setIsMoreLoading(true);
-        
-        const startTime = Date.now();
-
+    const fetchJobs = async (newOffset = 0, isMore = false) => {
+        setIsLoading(!isMore);
+        setIsMoreLoading(isMore);
+      
         const payload = {
-            "offset": newOffset,
-            "limit": 9,
-            "preset": "latest",
-            "profile": "list",
-            "fields": {
-                "include": ["career_categories.name", "source.shortname", "type.name"]
-            }
+          offset: newOffset,
+          limit: 9,
+          preset: "latest",
+          profile: "list",
+          fields: {
+            include: ["career_categories.name", "source.shortname", "type.name"],
+          },
         };
-
+      
         try {
-            const response = await axios.post(`https://api.reliefweb.int/v1/jobs?appname=${username}`, payload);
-            const updatedData = response.data.data.map(job => ({
-                ...job,
-                fields: {
-                    ...job.fields,
-                    title: toTitleCase(job.fields.title)
-                }
-            }));
-            setData(prevData => [...prevData, ...updatedData]);
-
-            const delay = 1500 - (Date.now() - startTime);
-            setTimeout(() => {
-                if (!isMore) setIsLoading(false);
-                else setIsMoreLoading(false);
-            }, delay > 0 ? delay : 0);
-
+          const response = await axios.post(
+            `https://api.reliefweb.int/v1/jobs?appname=${username}`,
+            payload
+          );
+          const updatedData = response.data.data.map((job) => ({
+            ...job,
+            fields: { ...job.fields, title: toTitleCase(job.fields.title) },
+          }));
+      
+          setData((prevData) => [...prevData, ...updatedData]);
         } catch (error) {
-            console.error("Failed to fetch jobs:", error);
-            if (!isMore) setIsLoading(false);
-            else setIsMoreLoading(false);
+          console.error("Failed to fetch jobs:", error);
+        } finally {
+          setIsLoading(false);
+          setIsMoreLoading(false);
         }
-        
-    };
+      };
 
     const fetchCountry = async (country = '') => {
 
@@ -242,39 +237,35 @@ function App() {
 
                 <p className='text-center text-lg mb-4'>Browse the latest from around the globe</p>
                 
-                <div className='flex justify-center'>
-                    <CountryList 
-                        countries={countries} 
-                        onSelectCountry={handleCountrySelect} 
-                        getCountryFlag={getCountryFlag} 
-                        maxCountries={5}
-                    />
-                </div>
-                {/* <Link className='text-center mt-4 mb-4 text-rose-600' to="/jobs">View All Countries</Link> */}
             </div>
 
-
             <JobListingBoard 
+            onSelectCountry={handleCountrySelect}
+            countries={countries}
             filteredJobs={filteredJobs}
             getCountryFlag={getCountryFlag}
             jobTypes={jobTypes}
             onSelectJobType={handleJobTypeSelect}
             isLoading={isLoading}
+            maxCountries={5}
+            handleCountrySelect={handleCountrySelect}
             />
 
             {/* End Job list */}
+
+            <div className='flex w-full bg-gray-100 justify-center pb-8'>
+                <button
+                    onClick={loadMoreJobs}
+                    disabled={isMoreLoading}
+                    className='bg-rose-600 rounded border-2 border-rose-600 text-white px-8 py-2'>
+                    {isMoreLoading ? 'Loading...' : 'Load More'}
+                </button>
+            </div>
         
 
         </div>
 
-        <div className='flex w-full bg-gray-100 justify-center pb-8'>
-            <button
-                onClick={loadMoreJobs}
-                disabled={isMoreLoading}
-                className='bg-rose-600 rounded border-2 border-rose-600 text-white px-8 py-2'>
-                {isMoreLoading ? 'Loading...' : 'Load More'}
-            </button>
-        </div>
+        
 
         </div>
 

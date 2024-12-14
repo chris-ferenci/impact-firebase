@@ -55,20 +55,20 @@ function Header() {
                 {/* Desktop Menu */}
                 <nav className="hidden md:flex md:items-center md:space-x-8">
                     <ul className="flex space-x-8">
-                        {/* <li>
-                            <Link
-                                className="text-neutral-900 hover:text-neutral-900 hover:border-b-4 hover:border-neutral-900"
-                                to="/jobs"
-                            >
-                                All Jobs
-                            </Link>
-                        </li> */}
                         <li>
                             <Link
                                 className="text-neutral-900 hover:text-neutral-900 hover:border-b-4 hover:border-neutral-900"
                                 to="/"
                             >
                                 Home
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                className="text-neutral-900 hover:text-neutral-900 hover:border-b-4 hover:border-neutral-900"
+                                to="/jobs"
+                            >
+                                All Jobs
                             </Link>
                         </li>
                         <li>

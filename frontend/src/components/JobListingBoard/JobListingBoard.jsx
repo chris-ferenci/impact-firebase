@@ -6,29 +6,46 @@ import CountryList from '../CountryList/CountryList';
 import JobsPerPageSelect from '../JobsPerPageSelect/JobsPerPageSelect';
 
 
-function JobListingBoard({ filteredJobs, getCountryFlag, jobTypes, onSelectJobType, isLoading }) {
+function JobListingBoard({ filteredJobs, getCountryFlag, isLoading, countries, handleCountrySelect  }) {
 
   console.log("Filtered jobs: " + filteredJobs)
+  console.log("Job listing boards:", countries)
+  
     
   return (
-    <div className='job-container bg-gray-100 py-8 px-8 md:px-48'>
+    <div className='job-container bg-gray-100 py-8 px-8 md:px-48 min-h-[600px]'>
 
-      {/* <CountryList countries={countries} onSelectCountry={handleCountrySelect} getCountryFlag={getCountryFlag}/> */}
-      {/* <JobTypeFilter jobTypes={jobTypes} onSelectJobType={onSelectJobType} /> */}
-
+        <div className='flex justify-center mb-8'>
+          <CountryList 
+            countries={countries} 
+            onSelectCountry={handleCountrySelect} 
+            getCountryFlag={getCountryFlag} 
+            maxCountries={5}
+          />
+        </div>
+        
       
         {isLoading ? (
           
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center h-full mt-8">
+            
             <Spinner />
           </div>
 
         ) : (
+          
           <div className="job-list flex flex-col">
+            
+
             {filteredJobs.map(job => 
             <JobCard key={job.id} job={job} getCountryFlag={getCountryFlag} />
+      
             )}
+
+            
             </div>
+            
+            
         )}
 
     </div>

@@ -12,6 +12,7 @@ export default function JobBoard() {
     const username = 'aidify-user-' + uuidv4();
 
     const [data, setData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [countries, setCountries] = useState([]);
     const [jobTypes, setJobTypes] = useState([]);
     const [selectedJobType, setSelectedJobType] = useState('');
@@ -31,6 +32,13 @@ export default function JobBoard() {
         return str.replace(/\w\S*/g, (txt) => {
           return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         });
+      };
+
+      // Handlers
+
+    const handleCountrySelect = (country) => {
+        setSelectedCountry(country);
+        fetchCountry(country);
       };
     
     // Data
@@ -202,10 +210,15 @@ export default function JobBoard() {
         <Header />
      
         <JobListingBoard 
+        onSelectCountry={handleCountrySelect}
+        countries={countries}
         filteredJobs={filteredJobs}
         getCountryFlag={getCountryFlag}
         jobTypes={jobTypes}
         onSelectJobType={handleJobTypeSelect}
+        isLoading={isLoading}
+        maxCountries={5}
+        handleCountrySelect={handleCountrySelect}
         />
                
         </div>
