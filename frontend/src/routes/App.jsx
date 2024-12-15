@@ -10,9 +10,7 @@ import '../App.css';
 import Header from '../components/Header/Header';
 import Search from '../components/Search/Search';
 import CountryList from '../components/CountryList/CountryList';
-import CategoryList from '../components/CategoryList/CategoryList';
 import heroImg from '../assets/img/hero-img-1.jpg';
-import JobDetailsPage from './JobDetailsPage';
 import countryFlags from '../data/countryFlags.json'
 import JobListingBoard from '../components/JobListingBoard/JobListingBoard';
 
@@ -32,10 +30,7 @@ function App() {
     const [jobTypes, setJobTypes] = useState([]);
     const [selectedJobType, setSelectedJobType] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterCountry, setFilterCountry] = useState('');
-    const [selectedJob, setSelectedJob] = useState(null);
     const [selectedCountry, setSelectedCountry] = useState(''); // This will store the clicked country
-    const [selectedCategory, setSelectedCategory] = useState('');
 
     const [offset, setOffset] = useState(0); // New state variable for pagination offset
 
@@ -118,66 +113,74 @@ function App() {
         }
       };
 
-    const fetchCountry = async (country = '') => {
-
+      const fetchCountry = async (country = '') => {
         setIsLoading(true);
-        const startTime = Date.now();
-
+      
         const params = {
-            offset: 0,
-            limit: 9,
-            preset: 'latest',
-            profile: 'list',
-            fields: {
-                include: ["career_categories.name", "source.shortname"]
-            },
-            filter: {
-                field: 'country',
-                value: country
-            }
+          offset: 0,
+          limit: 9,
+          preset: 'latest',
+          profile: 'list',
+          fields: {
+            include: ["career_categories.name", "source.shortname"]
+          },
+          filter: {
+            field: 'country',
+            value: country
+          }
         };
-  
+      
         try {
-            const response = await axios.get(`https://api.reliefweb.int/v1/jobs?appname=${username}`, { params });
-            setData(response.data.data);
-
-            const delay = 1500 - (Date.now() - startTime);
-            setTimeout(() => {
-                setData(response.data.data);  // Assume data is in response.data.data
-                setIsLoading(false);
-            }, delay > 0 ? delay : 0);
-            
+          const response = await axios.get(`https://api.reliefweb.int/v1/jobs?appname=${username}`, { params });
+          setData(response.data.data);
         } catch (error) {
-            console.error("Failed to fetch country data:", error);
-            setIsLoading(false);
+          console.error("Failed to fetch country data:", error);
+        } finally {
+          setIsLoading(false);
         }
       };
 
 
 
-    useEffect(() => {
-        fetchJobs();
-        // Fetching countries
-        fetch(`https://api.reliefweb.int/v1/jobs?appname=${username}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "facets": [
-                    {
-                        "field": "country.name",
-                        "limit": 500
-                    }
-                ],
+      useEffect(() => {
+        const fetchInitialData = async () => {
+          try {
+            const jobsRequest = axios.post(
+              `https://api.reliefweb.int/v1/jobs?appname=${username}`,
+              {
+                offset: 0,
+                limit: 9,
+                preset: "latest",
+                profile: "list",
+                fields: { include: ["career_categories.name", "source.shortname", "type.name"] },
+              }
+            );
+      
+            const countriesRequest = fetch(`https://api.reliefweb.int/v1/jobs?appname=${username}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                "facets": [{ "field": "country.name", "limit": 500 }],
                 "limit": 0
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            setCountries(data.embedded.facets['country.name'].data);
-        });
-    }, []);
+              })
+            }).then(response => response.json());
+      
+            const [jobsResponse, countriesData] = await Promise.all([jobsRequest, countriesRequest]);
+      
+            const updatedData = jobsResponse.data.data.map((job) => ({
+              ...job,
+              fields: { ...job.fields, title: toTitleCase(job.fields.title) },
+            }));
+      
+            setData(updatedData);
+            setCountries(countriesData.embedded.facets['country.name'].data);
+          } catch (error) {
+            console.error("Failed to fetch initial data:", error);
+          }
+        };
+      
+        fetchInitialData();
+      }, []);
 
     console.log("filtered jobs:", filteredJobs.map(job => job.id));
 
