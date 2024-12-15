@@ -6,7 +6,8 @@ import CountryList from '../CountryList/CountryList';
 import JobsPerPageSelect from '../JobsPerPageSelect/JobsPerPageSelect';
 
 
-function JobListingBoard({ filteredJobs, getCountryFlag, isLoading, countries, handleCountrySelect  }) {
+function JobListingBoard({ 
+  filteredJobs, getCountryFlag, isLoading, countries, handleCountrySelect  }) {
 
   console.log("Filtered jobs: " + filteredJobs)
   console.log("Job listing boards:", countries)

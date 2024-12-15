@@ -64,11 +64,6 @@ function App() {
         fetchJobType(jobType);
     }
 
-    // const handleCategorySelect = (category) => {
-    //     setSelectedCategory(category);
-    //     fetchJobs(category);
-    // };
-
     const filteredJobs = useMemo(
         () =>
           data.filter(
@@ -183,6 +178,8 @@ function App() {
             setCountries(data.embedded.facets['country.name'].data);
         });
     }, []);
+
+    console.log("filtered jobs:", filteredJobs.map(job => job.id));
 
     return (
     <HelmetProvider context={helmetContext}>
