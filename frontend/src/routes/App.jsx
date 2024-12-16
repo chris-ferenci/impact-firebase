@@ -21,7 +21,6 @@ const TRACKING_ID = "G-9LT7BKNPSS"; // OUR_TRACKING_ID
 
 function App() {
     const helmetContext = {};
-    const username = 'aidify-user-' + uuidv4();
 
     const [countries, setCountries] = useState([]);
     const [jobTypes, setJobTypes] = useState([]);
