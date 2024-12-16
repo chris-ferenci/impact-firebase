@@ -39,6 +39,16 @@ function JobListingBoard({ getCountryFlag }) {
     await fetchJobs(0, false, country, selectedJobType, jobsPerPage);
   };
 
+  // When the user picks a new jobsPerPage value
+  const handleJobsPerPageChange = (newLimit) => {
+    setJobsPerPage(newLimit);
+    // Reset offset and data so that we load a fresh set of jobs
+    setOffset(0);
+    setData([]);
+    // Fetch the initial set of jobs with the new limit
+    fetchJobs(0, false, selectedCountry, selectedJobType, newLimit);
+  };
+
   const filteredJobs = useMemo(
     () =>
       data.filter((job) => {
@@ -156,7 +166,7 @@ function JobListingBoard({ getCountryFlag }) {
     };
   
     fetchInitialData();
-  }, [username, jobsPerPage]);
+  }, []);
   
     
   return (
@@ -172,11 +182,14 @@ function JobListingBoard({ getCountryFlag }) {
         </div>
 
         {/* Jobs Per Page Select */}
-        <div className='flex justify-end mb-8'>
+        <div className='flex justify-between mb-8 items-center'>
+        <h2 className='text-center text-xl text-gray-900 font-bold'>
+          Opportunities in {selectedCountry ? selectedCountry : 'All Countries'}
+        </h2>
           <JobsPerPageSelect 
             value={jobsPerPage} 
-            onChange={setJobsPerPage} 
-            options={[10, 30, 50]}
+            onChange={handleJobsPerPageChange} 
+            options={[10, 25]}
           />
         </div>
       

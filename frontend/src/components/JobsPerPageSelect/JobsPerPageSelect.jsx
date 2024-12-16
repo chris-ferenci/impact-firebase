@@ -1,7 +1,7 @@
 // Example JobsPerPageSelect component:
 import React from 'react';
 
-function JobsPerPageSelect({ value, onChange, options = [10, 30, 50] }) {
+function JobsPerPageSelect({ value, onChange, options = [10, 25] }) {
   return (
     <select 
       className="border p-2 rounded bg-white" 
