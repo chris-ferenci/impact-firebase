@@ -23,24 +23,9 @@ function App() {
     const helmetContext = {};
     const username = 'aidify-user-' + uuidv4();
 
-    const [data, setData] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isMoreLoading, setIsMoreLoading] = useState(false);
     const [countries, setCountries] = useState([]);
     const [jobTypes, setJobTypes] = useState([]);
-    const [selectedJobType, setSelectedJobType] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCountry, setSelectedCountry] = useState(''); // This will store the clicked country
 
-    const [offset, setOffset] = useState(0); // New state variable for pagination offset
-
-    //Utilities
-    const toTitleCase = (str) => {
-        return str.replace(/\w\S*/g, (txt) => {
-          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        });
-      };
-    
     // Data
 
     const getCountryFlag = (countryName) => {
@@ -58,131 +43,6 @@ function App() {
         setSelectedJobType(jobType);
         fetchJobType(jobType);
     }
-
-    const filteredJobs = useMemo(
-        () =>
-          data.filter(
-            (job) =>
-              job.fields.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-              (!selectedCountry ||
-                (job.fields.country && job.fields.country[0].name === selectedCountry)) &&
-              (!selectedJobType ||
-                (job.fields.type && job.fields.type[0].name === selectedJobType))
-          ),
-        [data, searchTerm, selectedCountry, selectedJobType]
-      );
-
-      const loadMoreJobs = async () => {
-        const newOffset = offset + 9;
-        setOffset(newOffset); // Update state first
-        await fetchJobs(newOffset, true); // Use updated offset
-      };
-
-    // Fetching jobs
-
-    const fetchJobs = async (newOffset = 0, isMore = false) => {
-        setIsLoading(!isMore);
-        setIsMoreLoading(isMore);
-      
-        const payload = {
-          offset: newOffset,
-          limit: 9,
-          preset: "latest",
-          profile: "list",
-          fields: {
-            include: ["career_categories.name", "source.shortname", "type.name"],
-          },
-        };
-      
-        try {
-          const response = await axios.post(
-            `https://api.reliefweb.int/v1/jobs?appname=${username}`,
-            payload
-          );
-          const updatedData = response.data.data.map((job) => ({
-            ...job,
-            fields: { ...job.fields, title: toTitleCase(job.fields.title) },
-          }));
-      
-          setData((prevData) => [...prevData, ...updatedData]);
-        } catch (error) {
-          console.error("Failed to fetch jobs:", error);
-        } finally {
-          setIsLoading(false);
-          setIsMoreLoading(false);
-        }
-      };
-
-      const fetchCountry = async (country = '') => {
-        setIsLoading(true);
-      
-        const params = {
-          offset: 0,
-          limit: 9,
-          preset: 'latest',
-          profile: 'list',
-          fields: {
-            include: ["career_categories.name", "source.shortname"]
-          },
-          filter: {
-            field: 'country',
-            value: country
-          }
-        };
-      
-        try {
-          const response = await axios.get(`https://api.reliefweb.int/v1/jobs?appname=${username}`, { params });
-          setData(response.data.data);
-        } catch (error) {
-          console.error("Failed to fetch country data:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-
-
-      useEffect(() => {
-        const fetchInitialData = async () => {
-          try {
-            const jobsRequest = axios.post(
-              `https://api.reliefweb.int/v1/jobs?appname=${username}`,
-              {
-                offset: 0,
-                limit: 9,
-                preset: "latest",
-                profile: "list",
-                fields: { include: ["career_categories.name", "source.shortname", "type.name"] },
-              }
-            );
-      
-            const countriesRequest = fetch(`https://api.reliefweb.int/v1/jobs?appname=${username}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                "facets": [{ "field": "country.name", "limit": 500 }],
-                "limit": 0
-              })
-            }).then(response => response.json());
-      
-            const [jobsResponse, countriesData] = await Promise.all([jobsRequest, countriesRequest]);
-      
-            const updatedData = jobsResponse.data.data.map((job) => ({
-              ...job,
-              fields: { ...job.fields, title: toTitleCase(job.fields.title) },
-            }));
-      
-            setData(updatedData);
-            setCountries(countriesData.embedded.facets['country.name'].data);
-          } catch (error) {
-            console.error("Failed to fetch initial data:", error);
-          }
-        };
-      
-        fetchInitialData();
-      }, []);
-
-    console.log("filtered jobs:", filteredJobs.map(job => job.id));
 
     return (
     <HelmetProvider context={helmetContext}>
@@ -213,7 +73,6 @@ function App() {
                     <h1 className='text-5xl md:text-6xl text-left font-bold mb-8 leading-tighter tracking-tight'>Make your <span className='text-rose-600'>Impact</span></h1>
                     <h2 className='text-2xl text-left font-regular mb-8 leading-tight'>Explore leading job and volunteer opportunities in health, climate sustainability, and international development.</h2>
                     
-                    {/* <CategoryList categories={categories} onSelectCategory={handleCategorySelect} /> */}
                     <p className='text-neutral-800 font-bold'>Browse Latest Regions</p>
                     <CountryList countries={countries} onSelectCountry={handleCountrySelect} getCountryFlag={getCountryFlag} maxCountries={6}/>
                 </div>
@@ -242,25 +101,15 @@ function App() {
             <JobListingBoard 
             onSelectCountry={handleCountrySelect}
             countries={countries}
-            filteredJobs={filteredJobs}
+            // filteredJobs={filteredJobs}
             getCountryFlag={getCountryFlag}
             jobTypes={jobTypes}
             onSelectJobType={handleJobTypeSelect}
-            isLoading={isLoading}
+            // isLoading={isLoading}
             maxCountries={5}
             handleCountrySelect={handleCountrySelect}
             />
 
-            {/* End Job list */}
-
-            <div className='flex w-full bg-gray-100 justify-center pb-8'>
-                <button
-                    onClick={loadMoreJobs}
-                    disabled={isMoreLoading}
-                    className='bg-rose-600 rounded border-2 border-rose-600 text-white px-8 py-2'>
-                    {isMoreLoading ? 'Loading...' : 'Load More'}
-                </button>
-            </div>
         
 
         </div>
