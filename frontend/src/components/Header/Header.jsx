@@ -66,9 +66,9 @@ function Header() {
                         <li>
                             <Link
                                 className="text-neutral-900 hover:text-neutral-900 hover:border-b-4 hover:border-neutral-900"
-                                to="/jobs"
+                                to="/map"
                             >
-                                All Jobs
+                                Map
                             </Link>
                         </li>
                         <li>
