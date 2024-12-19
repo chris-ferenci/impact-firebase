@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 
 import { v4 as uuidv4 } from 'uuid';
 
-function CountryList({ onSelectCountry, getCountryFlag, maxCountries }) {
+function CountryList({ onSelectCountry, getCountryFlag, maxCountries = 5, showMoreButton = true, justify = 'center' }) {
 
     const username = 'aidify-user-' + uuidv4();
 
@@ -11,6 +11,7 @@ function CountryList({ onSelectCountry, getCountryFlag, maxCountries }) {
     const [visibleCountryCount, setVisibleCountryCount] = useState(5);
 
     const handleCountrySelect = (country) => {
+    console.log(country)
     setSelectedCountry(country);
     if (onSelectCountry) onSelectCountry(country);
     };
@@ -49,14 +50,16 @@ function CountryList({ onSelectCountry, getCountryFlag, maxCountries }) {
 
     const isAllJobsActive = selectedCountry === '';
 
+    // Just ensure that 'justify-center' etc. are valid classes.
+    const justifyClass = `justify-${justify}`;
+
     return (
         <div>
-            <ul className="list-none flex flex-wrap gap-2">
-
+            <ul className={`list-none flex flex-wrap gap-2 ${justifyClass}`}>
                 {/* "All Jobs" button to remove country filter */}
                 <li className='mb-2 mt-2'>
                 <button
-                    className={`rounded shadow-md shadow-neutral-500/10 font-medium bg-white border-t-0 border-l-0 border-r-0 border-b-0 hover:border-b-2 hover:border-neutral-900 text-neutral-900 py-2 px-4 ${isAllJobsActive ? 'bg-rose-100 border-b-2 border-rose-600' : ''}`}
+                    className={`flex flex-grow rounded shadow-md shadow-neutral-500/10 font-medium bg-white border-t-0 border-l-0 border-r-0 border-b-0 hover:border-b-2 hover:border-neutral-900 text-neutral-900 py-2 px-4 ${isAllJobsActive ? 'bg-rose-100 border-b-2 border-rose-600' : ''}`}
                     onClick={e => {
                     e.preventDefault();
                     handleShowAllJobs();
@@ -93,19 +96,20 @@ function CountryList({ onSelectCountry, getCountryFlag, maxCountries }) {
                 })}
             </ul>
 
-            <div className='flex gap-4 mt-4'>
-                {/* Show "Show More Countries" button only if there are more countries to show */}
-                {visibleCountryCount < countries.length && (
-                <button 
-                    onClick={handleShowMoreCountries} 
-                    className='bg-rose-600 text-white px-4 py-2 rounded-md'
-                >
-                    Show More Countries
-                </button>
-                )}
-
-                
+            <div className='flex flex-row justify-center mt-4'>
+        {/* Show "Show More Countries" button only if:
+            1) showMoreButton is true
+            2) There are more countries to show */}
+            {showMoreButton && visibleCountryCount < countries.length && (
+            <button 
+                onClick={handleShowMoreCountries} 
+                className='text-neutral-600 hover:bg-neutral-300 border border-neutral-300 font-md bg-transparent px-4 py-2 rounded-md'
+            >
+                Show More Countries
+            </button>
+            )}
             </div>
+        
         </div>
     );
 }

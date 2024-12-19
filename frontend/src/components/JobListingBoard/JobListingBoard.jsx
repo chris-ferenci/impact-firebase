@@ -8,7 +8,7 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
 
-function JobListingBoard({ getCountryFlag }) {
+function JobListingBoard({ getCountryFlag, selectedCountry, handleCountrySelect }) {
 
   const username = 'aidify-user-' + uuidv4();
 
@@ -18,7 +18,6 @@ function JobListingBoard({ getCountryFlag }) {
   const [isMoreLoading, setIsMoreLoading] = useState(false);
   const [offset, setOffset] = useState(0); // New state variable for pagination offset
 
-  const [selectedCountry, setSelectedCountry] = useState(''); // This will store the clicked country
   const [selectedJobType, setSelectedJobType] = useState('');
   const [jobsPerPage, setJobsPerPage] = useState(10);
 
@@ -27,26 +26,6 @@ function JobListingBoard({ getCountryFlag }) {
     return str.replace(/\w\S*/g, (txt) => {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
-  };
-
-  // Callback that gets passed down to CountryList
-
-  const handleCountrySelect = async (country) => {
-    setSelectedCountry(country);
-    // When a country is selected, reset offset and data, then fetch filtered jobs.
-    setOffset(0);
-    setData([]);
-    await fetchJobs(0, false, country, selectedJobType, jobsPerPage);
-  };
-
-  // When the user picks a new jobsPerPage value
-  const handleJobsPerPageChange = (newLimit) => {
-    setJobsPerPage(newLimit);
-    // Reset offset and data so that we load a fresh set of jobs
-    setOffset(0);
-    setData([]);
-    // Fetch the initial set of jobs with the new limit
-    fetchJobs(0, false, selectedCountry, selectedJobType, newLimit);
   };
 
   const filteredJobs = useMemo(
@@ -79,7 +58,6 @@ function JobListingBoard({ getCountryFlag }) {
     limit = jobsPerPage
   ) => {
 
-    console.log('fetchJobs limit:', jobsPerPage); // Debug line
     setIsLoading(!isMore);
     setIsMoreLoading(isMore);
   
@@ -95,6 +73,7 @@ function JobListingBoard({ getCountryFlag }) {
 
     // Add a filter if a country is selected
     if (country) {
+      console.log("filtered country", country)
       payload.filter = {
         field: 'country',
         value: country
@@ -136,61 +115,55 @@ function JobListingBoard({ getCountryFlag }) {
 
 
   useEffect(() => {
-    // Fetch without filters
-    const fetchInitialData = async () => {
-      try {
-        const jobsRequest = axios.post(
-          `https://api.reliefweb.int/v1/jobs?appname=${username}`,
-          {
-            offset: 0,
-            limit: jobsPerPage,
-            preset: "latest",
-            profile: "list",
-            fields: { include: ["career_categories.name", "source.shortname", "type.name"] },
-          }
-        );
-  
-        const jobsResponse = await jobsRequest;
-  
-        const updatedData = jobsResponse.data.data.map((job) => ({
-          ...job,
-          fields: { ...job.fields, title: toTitleCase(job.fields.title) },
-        }));
-
-        const totalCount = jobsResponse.data?.totalCount || 0;
-        setTotalJobs(totalCount);
-        setData(updatedData);
-      } catch (error) {
-        console.error("Failed to fetch initial job data:", error);
-      }
-    };
-  
-    fetchInitialData();
-  }, []);
+    // When selectedCountry changes, re-fetch data
+    setData([]);
+    setOffset(0);
+    fetchJobs(0, false, selectedCountry, jobsPerPage);
+  }, [selectedCountry, jobsPerPage]);
   
     
   return (
-    <div className='job-container bg-gray-100 py-8 px-8 md:px-48 min-h-[600px]'>
+    <div className='bg-gray-100 py-8 md:px-48 min-h-[600px]'>
+      <div className='flex flex-col w-full bg-neutral-100 px-8 md:px-16'>
+        <h2 className='text-center text-xl text-neutral-800 font-bold'>
+          Latest Opportunities Around the Globe
+          </h2>
+        <p className='text-center my-2 text-gray-700 font-medium'>
+          Displaying {Math.min(filteredJobs.length, jobsPerPage)} of {totalJobs} Opportunities
+        </p>
+      </div>
 
-        <div className='flex justify-center mb-8'>
-          <CountryList 
-            onSelectCountry={handleCountrySelect} 
-            getCountryFlag={getCountryFlag} 
-            maxCountries={5}
-          />
-          
-        </div>
+      <div className='flex mb-8 justify-center'>
+        <CountryList 
+          onSelectCountry={handleCountrySelect} 
+          getCountryFlag={getCountryFlag} 
+          maxCountries={5}
+        />
+        
+      </div>
 
         {/* Jobs Per Page Select */}
-        <div className='flex justify-between mb-8 items-center'>
-        <h2 className='text-center text-xl text-gray-900 font-bold'>
-          Opportunities in {selectedCountry ? selectedCountry : 'All Countries'}
-        </h2>
-          <JobsPerPageSelect 
-            value={jobsPerPage} 
-            onChange={handleJobsPerPageChange} 
-            options={[10, 25]}
-          />
+        <div className='flex justify-between mb-4 items-center'>
+
+          <h2 className='text-center text-xl text-gray-900 font-bold'>
+            Opportunities in {selectedCountry ? selectedCountry : 'All Countries'}
+          </h2>
+
+
+          <div className='flex flex-col'>
+              <JobsPerPageSelect 
+                value={jobsPerPage} 
+                onChange={(newLimit) => {
+                  setJobsPerPage(newLimit);
+                  setOffset(0);
+                  setData([]);
+                  fetchJobs(0, false, selectedCountry, newLimit);
+                }}
+                options={[10, 25]}
+              />
+
+          </div>
+
         </div>
       
         {isLoading ? (
@@ -200,9 +173,7 @@ function JobListingBoard({ getCountryFlag }) {
         ) : (
           <div className="job-list flex flex-col">
 
-          <div className='mb-4 text-gray-700 font-medium'>
-            Displaying {Math.min(filteredJobs.length, jobsPerPage)} of {totalJobs} Results
-          </div>
+          
 
             {filteredJobs.slice(0, jobsPerPage).map(job => (
               <JobCard key={job.id} job={job} getCountryFlag={getCountryFlag} />

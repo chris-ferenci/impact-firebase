@@ -22,6 +22,7 @@ const TRACKING_ID = "G-9LT7BKNPSS"; // OUR_TRACKING_ID
 function App() {
     const helmetContext = {};
 
+    const [selectedCountry, setSelectedCountry] = useState(''); // Lift state up here
     const [countries, setCountries] = useState([]);
     const [jobTypes, setJobTypes] = useState([]);
 
@@ -35,13 +36,12 @@ function App() {
 
     const handleCountrySelect = (country) => {
       setSelectedCountry(country);
-      fetchCountry(country);
     };
 
-    const handleJobTypeSelect = (jobType) => {
-        setSelectedJobType(jobType);
-        fetchJobType(jobType);
-    }
+    // const handleJobTypeSelect = (jobType) => {
+    //     setSelectedJobType(jobType);
+    //     fetchJobType(jobType);
+    // }
 
     return (
     <HelmetProvider context={helmetContext}>
@@ -72,8 +72,22 @@ function App() {
                     <h1 className='text-5xl md:text-6xl text-left font-bold mb-8 leading-tighter tracking-tight'>Make your <span className='text-rose-600'>Impact</span></h1>
                     <h2 className='text-2xl text-left font-regular mb-8 leading-tight'>Explore leading job and volunteer opportunities in health, climate sustainability, and international development.</h2>
                     
-                    <p className='text-neutral-800 font-bold'>Browse Latest Regions</p>
-                    <CountryList countries={countries} onSelectCountry={handleCountrySelect} getCountryFlag={getCountryFlag} maxCountries={6}/>
+                    <p className='text-neutral-800 font-bold'>Opportunities Around the Globe</p>
+                    
+                    <CountryList 
+                    countries={countries}
+                    onSelectCountry={handleCountrySelect}
+                    getCountryFlag={getCountryFlag} 
+                    maxCountries={6}
+                    showMoreButton={false}
+                    justify='start'
+                    />
+
+                    <div className='flex'>
+                        <Link to='/jobs'>
+                            <button className='bg-rose-600 hover:bg-rose-800 rounded  text-white px-4 py-2'>Browse All Opportunities</button>
+                        </Link>
+                    </div>
                 </div>
 
                 <div className='hidden sm:block md:w-1/2 bg-gray-100'>
@@ -82,33 +96,24 @@ function App() {
 
             </div>
 
-            <div className='flex flex-row w-full bg-neutral-900 px-4 py-4 justify-center'>
+            {/* <div className='flex flex-row w-full bg-neutral-900 px-4 py-4 justify-center'>
                 <Search  />
-            </div>
+            </div> */}
 
 
             {/* JOB LIST */}
-
-            <div className='flex flex-col w-full bg-neutral-100 pt-8 px-8 md:px-16'>
-
-                <h2 className='text-center text-2xl text-gray-900 font-bold'>Latest Opportunities Around the World</h2>
-
-                <p className='text-center text-lg mb-4'>Browse the latest from around the globe</p>
-                
-            </div>
-
-            <JobListingBoard 
-            onSelectCountry={handleCountrySelect}
-            countries={countries}
-            // filteredJobs={filteredJobs}
+            
+           
+            <JobListingBoard
+            selectedCountry={selectedCountry} // Pass selectedCountry down
+            // onSelectCountry={handleCountrySelect}
+            // countries={countries}
             getCountryFlag={getCountryFlag}
-            jobTypes={jobTypes}
-            onSelectJobType={handleJobTypeSelect}
-            // isLoading={isLoading}
-            maxCountries={5}
+            // jobTypes={jobTypes}
+            // onSelectJobType={handleJobTypeSelect}
+            // maxCountries={5}
             handleCountrySelect={handleCountrySelect}
             />
-
         
 
         </div>

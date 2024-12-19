@@ -4,7 +4,7 @@ import React from 'react';
 function JobsPerPageSelect({ value, onChange, options = [10, 25] }) {
   return (
     <select 
-      className="border p-2 rounded bg-white" 
+      className="border p-2 rounded bg-white text-neutral-900" 
       value={value} 
       onChange={e => onChange(parseInt(e.target.value, 10))}
     >
