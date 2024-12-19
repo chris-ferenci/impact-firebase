@@ -4,9 +4,10 @@ function JobSummary({ jobDescription }) {
     const [summary, setSummary] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [dots, setDots] = useState(""); // For animated dots
 
     useEffect(() => {
-        console.log("env:", process.env.REACT_APP_BACKEND_URL)
+
         if (jobDescription) {
             // Check if a summary is already saved in localStorage
             const cachedSummary = localStorage.getItem(jobDescription);
@@ -18,6 +19,16 @@ function JobSummary({ jobDescription }) {
         }
     }, [jobDescription]);
 
+    useEffect(() => {
+        // Animate dots
+        if (loading) {
+            const interval = setInterval(() => {
+                setDots((prev) => (prev.length < 3 ? prev + "." : ""));
+            }, 500);
+            return () => clearInterval(interval);
+        }
+    }, [loading]);
+
     const fetchSummary = async (description) => {
         setLoading(true);
         setError(null);
@@ -26,6 +37,7 @@ function JobSummary({ jobDescription }) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    'x-api-key': 'your-secret-key'
                 },
                 body: JSON.stringify({ jobDescription: description }),
             });
@@ -43,7 +55,15 @@ function JobSummary({ jobDescription }) {
         setLoading(false);
     };
 
-    if (loading) return <p>Loading summary...</p>;
+    if (loading) {
+        return (
+            <div className="text-sm text-neutral-600">
+                Summarizing<span>{dots}</span>
+            </div>
+        );
+    }
+
+
     if (error) return <p>Error: {error}</p>;
 
     return <p>{summary}</p>;
