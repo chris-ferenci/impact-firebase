@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
@@ -42,6 +42,24 @@ function MapWithCountryJobs() {
 
     fetchCountryFacets();
   }, []);
+
+  // 1) Find the maximum job count for dynamic scaling
+  const maxCount = useMemo(() => {
+    if (countries.length === 0) return 0;
+    return Math.max(...countries.map((c) => c.count || 0));
+  }, [countries]);
+
+  // 2) Define a scaling function for circle radius
+  //    Here we map count=0 -> radius=5, count=maxCount -> radius=15
+  const scaleMarkerSize = (count) => {
+    const minRadius = 5;
+    const maxRadius = 15;
+    if (maxCount === 0) return minRadius; // avoid division by zero
+    // Map the job count proportionally between minRadius and maxRadius
+    return (
+      ((count || 0) / maxCount) * (maxRadius - minRadius) + minRadius
+    );
+  };
 
   const handleZoomIn = () => {
     setZoom(prev => Math.min(prev + 0.5, 8)); // max zoom ~8
@@ -98,13 +116,16 @@ function MapWithCountryJobs() {
                   // Only render a marker if we have coordinates for this country
                   if (!coords) return null;
 
+                  // 3) Calculate dynamic radius
+                  const radius = scaleMarkerSize(count);
+
                   return (
                     <Marker 
                       key={value} 
                       coordinates={coords}
                       onClick={() => handleMarkerClick(value, count, coords)}
                     >
-                      <circle r={5} fill="#F53" stroke="#fff" strokeWidth={2} />
+                      <circle r={radius} fill="#F53" stroke="#fff" strokeWidth={2} />
                       <text
                         textAnchor="middle"
                         y={-10}
