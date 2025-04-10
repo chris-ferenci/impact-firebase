@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-import secrets
 from flask_cors import CORS, cross_origin
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -7,10 +6,12 @@ import os
 import tiktoken  # OpenAI tokenizer library
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
 app = Flask(__name__)
 CORS(app)
+
+print("OpenAI Key:", os.getenv("OPENAI_API_KEY"))
 
 # Configure OpenAI client using the API key from the environment variable
 openai_api_key = os.getenv('OPENAI_API_KEY')

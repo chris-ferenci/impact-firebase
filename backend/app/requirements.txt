@@ -5,4 +5,3 @@ tiktoken
 python-dotenv
 Gunicorn
 pyOpenSSL
-secrets

@@ -33,11 +33,11 @@ function JobSummary({ jobDescription }) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('https://impact-api-dev.onrender.com/summarize', {
+            const response = await fetch("http://127.0.0.1:5000//summarize", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    'x-api-key': 'your-secret-key'
+                    'x-api-key': 'SBB8WgHSihGKtWd7RyAo4Qx3y7cFrNQ3vd7Qs86b9qs='
                 },
                 body: JSON.stringify({ jobDescription: description }),
             });
