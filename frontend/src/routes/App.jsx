@@ -59,7 +59,7 @@ function App() {
 
     return (
     <HelmetProvider context={helmetContext}>
-      <div className="w-full bg-gray-100 text-neutral-900">
+      <div className="w-screen bg-gray-100 text-neutral-900">
         <Helmet>
             <title>ImpactCareers | Opportunities in Health, Climate, International Development</title>
             <meta name="description" content="Discover a diverse range of career, job, and volunteer opportunities in the health, climate change, and international development sectors. Connect with impactful positions globally and advance your career while contributing to significant causes. Explore our updated listings to find roles that match your skills and passions." />

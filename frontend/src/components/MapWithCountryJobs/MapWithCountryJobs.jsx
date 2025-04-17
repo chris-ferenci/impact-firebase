@@ -74,7 +74,7 @@ function MapWithCountryJobs() {
   };
 
   return (
-    <div className="w-screen h-screen bg-white relative">
+    <div className=" bg-white relative">
       {isLoading ? (
         <p className='text-center mt-8 text-gray-700'>Loading map data...</p>
       ) : (
