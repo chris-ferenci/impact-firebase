@@ -83,11 +83,11 @@ function MapWithCountryJobs() {
           <div className='absolute top-4 left-4 z-10 flex flex-col space-y-2'>
             <button 
               onClick={handleZoomIn} 
-              className='bg-gray-200 p-2 rounded hover:bg-gray-300'
+              className='bg-white shadow-md w-10 h-10 rounded hover:bg-gray-300'
             >+</button>
             <button 
               onClick={handleZoomOut} 
-              className='bg-gray-200 p-2 rounded hover:bg-gray-300'
+              className='bg-white shadow-md w-10 h-10 rounded hover:bg-gray-300'
             >-</button>
           </div>
 
@@ -139,37 +139,39 @@ function MapWithCountryJobs() {
 
                 {/* Popup for selected marker */}
                 {selectedMarker && (
-                  <g transform={`translate(${selectedMarker.coords[0]}, ${selectedMarker.coords[1]})`}>
-                    {/* A rectangle background for the popup */}
-                    <rect 
-                      x={-50} 
-                      y={-50} 
-                      width={100} 
-                      height={40} 
-                      rx={5} 
-                      ry={5} 
-                      fill="white" 
-                      stroke="#333"
-                    />
-                    <text 
-                      x={0} 
-                      y={-38} 
-                      textAnchor="middle" 
-                      style={{ fontFamily: "system-ui", fill: "#333", fontSize: "10px" }}
-                    >
-                      {selectedMarker.value} ({selectedMarker.count})
-                    </text>
-                    <foreignObject x={-40} y={-30} width={80} height={30}>
-                      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height:'100%'}}>
-                        <Link 
-                          to={`/job-details?country=${encodeURIComponent(selectedMarker.value)}`} 
-                          className="bg-rose-600 text-white text-xs px-2 py-1 rounded hover:bg-rose-700"
-                        >
-                          View Jobs
-                        </Link>
-                      </div>
-                    </foreignObject>
-                  </g>
+                  <Marker coordinates={selectedMarker.coords}>
+                    {/* now (0,0) is the circle’s center in screen‑space */}
+                    <g transform="translate(0, -20)">
+                      <rect
+                        x={-50}
+                        y={-60}
+                        width={100}
+                        height={40}
+                        rx={5}
+                        ry={5}
+                        fill="white"
+                        stroke="#333"
+                      />
+                      <text
+                        x={0}
+                        y={-38}
+                        textAnchor="middle"
+                        style={{ fontFamily: 'system-ui', fontSize: '10px', fill: '#333' }}
+                      >
+                        {selectedMarker.value} ({selectedMarker.count})
+                      </text>
+                      <foreignObject x={-40} y={-30} width={80} height={30}>
+                        <div className="flex justify-center items-center h-full">
+                          <Link
+                            to={`/job-details?country=${encodeURIComponent(selectedMarker.value)}`}
+                            className="bg-rose-600 text-white text-xs px-2 py-1 rounded hover:bg-rose-700"
+                          >
+                            View Jobs
+                          </Link>
+                        </div>
+                      </foreignObject>
+                    </g>
+                  </Marker>
                 )}
               </ZoomableGroup>
             </ComposableMap>
