@@ -35,6 +35,9 @@ function JobDetails() {
 
     useEffect(() => {
 
+        setLoading(true)
+        
+
         // Default job fetching
         const postData = {
             "offset": 0,
@@ -50,28 +53,35 @@ function JobDetails() {
         };
 
     
-        fetch('https://api.reliefweb.int/v1/jobs?appname=aidify-user-0', {
+        const fetchJobs = fetch('https://api.reliefweb.int/v1/jobs?appname=aidify-user-0', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(postData)
         })
-        .then(response => response.json())
-        .then(responseData => {
-            console.log(responseData.data)
-            // Check if data is available and then apply title case to titles
-            if (responseData.data && responseData.data.length > 0) {
-                responseData.data.forEach(item => {
-                    item.fields.title = toTitleCase(item.fields.title);
-                });
-                setData(responseData.data);
-            }
-            
-        })
-        .finally(() => setLoading(false));
+        .then(res => res.json());
+
+        // a promise that resolves in 1s (1000ms)
+        const minimumDelay = new Promise(resolve =>
+            setTimeout(resolve, 1300)
+        );
+
+        Promise.all([fetchJobs, minimumDelay])
+            .then(([responseData]) => {
+            const jobs = responseData.data || [];
+            jobs.forEach(item => {
+                item.fields.title = toTitleCase(item.fields.title);
+            });
+            setData(jobs);
+            })
+            .catch(err => {
+            console.error(err);
+            // …maybe show an error state…
+            })
+            .finally(() => {
+            setLoading(false);
+            });
     
-    }, []);
+    }, [id]);
 
     // HELPER FUNCTIONS
 
@@ -98,12 +108,12 @@ function JobDetails() {
 
     if (loading) {
         return (
-            <div className="w-full min-h-screen p-8 md:p-16 animate-pulse">
-                <div className="h-6 bg-gray-300 w-1/3 mb-4 rounded"></div>
+            <div className="w-screen min-h-screen p-8 md:p-16 animate-pulse">
+                <div className="h-16 bg-gray-300 w-1/3 mb-4 rounded"></div>
                 <div className="h-10 bg-gray-200 w-2/3 mb-8 rounded"></div>
-                <div className="h-4 bg-gray-200 w-full mb-2 rounded"></div>
-                <div className="h-4 bg-gray-200 w-5/6 mb-2 rounded"></div>
-                <div className="h-4 bg-gray-200 w-3/4 rounded"></div>
+                <div className="h-8 bg-gray-200 w-full mb-2 rounded"></div>
+                <div className="h-8 bg-gray-200 w-5/6 mb-2 rounded"></div>
+                <div className="h-8 bg-gray-200 w-3/4 rounded"></div>
             </div>
         );
     }
@@ -111,7 +121,7 @@ function JobDetails() {
     return (
         <>
             {data.map((job) => (
-                <div className="job-details w-full text-neutral-900" key={job.id}>
+                <div className="job-details bg-white w-full text-neutral-900" key={job.id}>
                     <div className="md:grid md:grid-cols-3 md:gap-8">
                         
                         {/* Left Column */}
