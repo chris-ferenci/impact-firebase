@@ -82,14 +82,6 @@ function JobListingBoard({ getCountryFlag, selectedCountry, handleCountrySelect 
       };
     }
 
-    // If you also want to filter by jobType on the server side:
-    // if (jobType) {
-    //   payload.filter = {
-    //     ...payload.filter,
-    //     field: 'type.name',
-    //     value: jobType
-    //   };
-    // }
   
     try {
       const response = await axios.post(
