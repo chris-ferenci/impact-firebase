@@ -15,8 +15,9 @@ export default function JobDetailsPage() {
 
     return(
         <>
+        <div className='flex flex-col w-full bg-white min-h-[600px]'>
         <Header />
-        <div className='flex flex-col w-full bg-white'>
+        
             <ErrorBoundary>
                 <JobDetails />
             </ErrorBoundary>

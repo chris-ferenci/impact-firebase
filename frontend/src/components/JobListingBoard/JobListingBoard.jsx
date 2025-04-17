@@ -6,6 +6,8 @@ import CountryList from '../CountryList/CountryList';
 import JobsPerPageSelect from '../JobsPerPageSelect/JobsPerPageSelect';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { motion } from "framer-motion";
+
 
 
 function JobListingBoard({ getCountryFlag, selectedCountry, handleCountrySelect }) {
@@ -165,34 +167,42 @@ function JobListingBoard({ getCountryFlag, selectedCountry, handleCountrySelect 
           </div>
 
         </div>
-      
-        {isLoading ? (
-          <div className="flex justify-center items-center h-full mt-8">
-            <Spinner />
-          </div>
-        ) : (
-          <div className="job-list flex flex-col">
 
-          
-
-            {filteredJobs.slice(0, jobsPerPage).map(job => (
-              <JobCard key={job.id} job={job} getCountryFlag={getCountryFlag} />
-            ))}
-            {/* End Job list */}
-
-            {filteredJobs.length < totalJobs && filteredJobs.length > 0 && (
-            <div className='flex w-full bg-gray-100 justify-center pb-8'>
-                <button
-                    onClick={loadMoreJobs}
-                    disabled={isMoreLoading}
-                    className='bg-rose-600 rounded border-2 border-rose-600 text-white px-8 py-2'>
-                    {isMoreLoading ? 'Loading...' : 'Load More'}
-                </button>
+        <div className="job-list flex flex-col min-h-[400px]">
+  
+          {isLoading ? (
+            <div className="flex justify-center items-center h-full">
+              <Spinner />
             </div>
-            )}
+          ) : (
+            <div className="job-list flex flex-col">
+
+              {filteredJobs.slice(0, jobsPerPage).map((job, index) => (
+                <motion.div
+                  key={job.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05, duration: 0.4, ease: "easeOut" }}
+                >
+                  <JobCard key={job.id} job={job} getCountryFlag={getCountryFlag} />
+                </motion.div>
+              ))}
+              {/* End Job list */}
+
+              {filteredJobs.length < totalJobs && filteredJobs.length > 0 && (
+              <div className='flex w-full bg-gray-100 justify-center pb-8'>
+                  <button
+                      onClick={loadMoreJobs}
+                      disabled={isMoreLoading}
+                      className='bg-rose-600 rounded border-2 border-rose-600 text-white px-8 py-2'>
+                      {isMoreLoading ? 'Loading...' : 'Load More'}
+                  </button>
+              </div>
+              )}
+            </div>
+            
+          )}
           </div>
-          
-        )}
 
     </div>
   );

@@ -17,6 +17,8 @@ function JobDetails() {
     const [isFooterOpen, setIsFooterOpen] = useState(true);
     const toggleFooter = () => setIsFooterOpen(!isFooterOpen);
 
+    const [loading, setLoading] = useState(true);
+
     const navigate = useNavigate();
 
     const handleBackClick = () => {
@@ -26,6 +28,10 @@ function JobDetails() {
     const getCountryFlag = (countryName) => {
         return countryFlags[countryName] || ""; // This will return the flag emoji or an empty string if not found
     }
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }, []);
 
     useEffect(() => {
 
@@ -62,7 +68,8 @@ function JobDetails() {
                 setData(responseData.data);
             }
             
-        });
+        })
+        .finally(() => setLoading(false));
     
     }, []);
 
@@ -88,6 +95,18 @@ function JobDetails() {
             }
         }
     };
+
+    if (loading) {
+        return (
+            <div className="w-full min-h-screen p-8 md:p-16 animate-pulse">
+                <div className="h-6 bg-gray-300 w-1/3 mb-4 rounded"></div>
+                <div className="h-10 bg-gray-200 w-2/3 mb-8 rounded"></div>
+                <div className="h-4 bg-gray-200 w-full mb-2 rounded"></div>
+                <div className="h-4 bg-gray-200 w-5/6 mb-2 rounded"></div>
+                <div className="h-4 bg-gray-200 w-3/4 rounded"></div>
+            </div>
+        );
+    }
 
     return (
         <>

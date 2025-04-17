@@ -7,7 +7,8 @@ function Header() {
 
     return (
         <header className="sticky top-0 z-40 w-full bg-gray-50 border-b-4 border-gray-900">
-            <div className="flex justify-between items-center py-4 px-8">
+            <div className="flex items-center justify-between px-8 py-4 min-h-[60px]">
+                <div className="flex justify-between items-center py-4 px-8">
                 <Link to="/">
                     <h1 className="text-2xl text-gray-900 font-bold tracking-tighter">
                         <span className="text-rose-600 font-bold">impact</span>hub
@@ -51,9 +52,10 @@ function Header() {
                         </svg>
                     )}
                 </button>
+            </div>
 
                 {/* Desktop Menu */}
-                <nav className="hidden md:flex md:items-center md:space-x-8">
+                <nav className="hidden md:flex md:items-center md:space-x-8 min-w-[400px] justify-end">
                     <ul className="flex space-x-8">
                         <li>
                             <Link

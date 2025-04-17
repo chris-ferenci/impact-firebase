@@ -12,9 +12,9 @@ export default function About() {
     };
 
     return(
-        <div className="app">
+        <>
         <Header />
-        <div className='flex flex-col w-full p-8 m-auto md:mt-16 gap-4 md:w-3/5 bg-white text-center md:text-left'>
+        <div className='flex flex-col text-neutral-900 w-full p-8 m-auto md:mt-16 gap-4 md:w-3/5 bg-white text-center md:text-left'>
             <div className="flex flex-col">
                 <h1 className="text-4xl font-semibold mb-2">About Us</h1>
                 <p>At ImpactHub, we believe that impactful work starts with connecting the right people to the right opportunities. We’re more than just a jobs board—we’re a global platform dedicated to helping individuals and organizations make meaningful contributions to humanitarian, development, and sustainability initiatives around the world.</p>
@@ -62,7 +62,7 @@ export default function About() {
 
             Join us at ImpactHub. Together, we can transform challenges into opportunities and ideals into action, creating a future where every inspired individual and organization finds their perfect place to make a difference.
         </div>
-        </div>
+        </>
 
     )
 }

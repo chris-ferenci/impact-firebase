@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -17,6 +18,19 @@ import JobListingBoard from '../components/JobListingBoard/JobListingBoard';
 import ReactGA from "react-ga4";
 const TRACKING_ID = "G-9LT7BKNPSS"; // OUR_TRACKING_ID
   ReactGA.initialize(TRACKING_ID);
+
+const cascadeVariant = {
+hidden: { opacity: 0, y: 20 },
+visible: (i = 1) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+    delay: i * 0.2,
+    duration: 0.6,
+    ease: 'easeOut',
+    },
+}),
+};
 
 
 function App() {
@@ -45,8 +59,7 @@ function App() {
 
     return (
     <HelmetProvider context={helmetContext}>
-
-      <div className="app w-full text-neutral-900">
+      <div className="w-full bg-gray-100 text-neutral-900">
         <Helmet>
             <title>ImpactCareers | Opportunities in Health, Climate, International Development</title>
             <meta name="description" content="Discover a diverse range of career, job, and volunteer opportunities in the health, climate change, and international development sectors. Connect with impactful positions globally and advance your career while contributing to significant causes. Explore our updated listings to find roles that match your skills and passions." />
@@ -68,27 +81,54 @@ function App() {
         <div>
             <div className='flex flex-col md:flex-row w-full bg-white'>
 
-                <div className="w-full md:w-1/2 flex flex-col flex-wrap px-8 py-8 md:px-16 md:py-16">
-                    <h1 className='text-5xl md:text-6xl text-left font-bold mb-8 leading-tighter tracking-tight'>Make your <span className='text-rose-600'>Impact</span></h1>
-                    <h2 className='text-2xl text-left font-regular mb-8 leading-tight'>Explore leading job and volunteer opportunities in health, climate sustainability, and international development.</h2>
-                    
-                    <p className='text-neutral-800 font-bold'>Opportunities Around the Globe</p>
-                    
-                    <CountryList 
-                    countries={countries}
-                    onSelectCountry={handleCountrySelect}
-                    getCountryFlag={getCountryFlag} 
-                    maxCountries={6}
-                    showMoreButton={false}
-                    justify='start'
-                    />
+                <motion.div 
+                initial="hidden"
+                animate="visible"
+                className="w-full md:w-1/2 flex flex-col flex-wrap px-8 py-8 md:px-16 md:py-16"
+                >
+                    <motion.h1 
+                    className='text-5xl md:text-6xl text-left font-bold mb-8 leading-tighter tracking-tight'
+                    custom={1}
+                    variants={cascadeVariant}
+                    >
+                        Make your <span className='text-rose-600'>Impact</span>
+                    </motion.h1>
 
-                    <div className='flex'>
+                    <motion.h2 
+                    className='text-2xl text-left font-regular mb-8 leading-tight'
+                    custom={2}
+                    variants={cascadeVariant}
+                    >
+                        Explore leading job and volunteer opportunities in health, climate sustainability, and international development.
+
+                    </motion.h2>
+                    
+                    <motion.p 
+                    className='text-neutral-800 font-bold'
+                    custom={3}
+                    variants={cascadeVariant}
+                    >
+                        Opportunities Around the Globe
+                    </motion.p>
+                    
+                    <motion.div custom={4} variants={cascadeVariant}>
+                        <CountryList 
+                        countries={countries}
+                        onSelectCountry={handleCountrySelect}
+                        getCountryFlag={getCountryFlag} 
+                        maxCountries={6}
+                        showMoreButton={false}
+                        justify='start'
+                        />
+                    </motion.div>
+
+                    <motion.div className='flex mt-4' custom={5} variants={cascadeVariant}>
                         <Link to='/jobs'>
                             <button className='bg-rose-600 hover:bg-rose-800 rounded  text-white px-4 py-2'>Browse All Opportunities</button>
                         </Link>
-                    </div>
-                </div>
+                    </motion.div>
+
+                </motion.div>
 
                 <div className='hidden sm:block md:w-1/2 bg-gray-100'>
                     <img className="overflow-x-hidden" src={heroImg} alt="hero-img" style={{objectFit: "cover", height:"100%", width:"auto"}} />
@@ -103,17 +143,17 @@ function App() {
 
             {/* JOB LIST */}
             
-           
-            <JobListingBoard
-            selectedCountry={selectedCountry} // Pass selectedCountry down
-            // onSelectCountry={handleCountrySelect}
-            // countries={countries}
-            getCountryFlag={getCountryFlag}
-            // jobTypes={jobTypes}
-            // onSelectJobType={handleJobTypeSelect}
-            // maxCountries={5}
-            handleCountrySelect={handleCountrySelect}
-            />
+            <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.6 }}
+            >
+                <JobListingBoard
+                selectedCountry={selectedCountry} // Pass selectedCountry down
+                getCountryFlag={getCountryFlag}
+                handleCountrySelect={handleCountrySelect}
+                />
+            </motion.div>
         
 
         </div>
