@@ -125,7 +125,7 @@ function MapWithCountryJobs() {
                       coordinates={coords}
                       onClick={() => handleMarkerClick(value, count, coords)}
                     >
-                      <circle r={radius} fill="#F53" stroke="#fff" strokeWidth={2} />
+                      <circle r={radius} fill="#e11d48" stroke="#fff" strokeWidth={2} />
                       <text
                         textAnchor="middle"
                         y={-10}
