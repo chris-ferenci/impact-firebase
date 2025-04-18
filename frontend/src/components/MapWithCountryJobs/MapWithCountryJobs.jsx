@@ -183,13 +183,13 @@ function MapWithCountryJobs() {
                         "
                       >
                         {/* Title + count */}
-                        <p className="font-semibold text-base leading-tight">
+                        <p className="text-neutral-900 font-semibold text-base leading-tight">
                           {selectedMarker.value}
                         </p>
                         <p className="text-neutral-500">{selectedMarker.count} jobs</p>
                         {/* Action link */}
                         <Link
-                          to={`/job-details?country=${encodeURIComponent(selectedMarker.value)}`}
+                          to={`/jobs?country=${encodeURIComponent(selectedMarker.value)}`}
                           className="
                             mt-2
                             inline-block

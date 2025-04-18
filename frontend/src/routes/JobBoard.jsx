@@ -1,5 +1,7 @@
 import React , {useState, useEffect} from "react"
 import { useNavigate, Outlet } from "react-router-dom"
+import { useSearchParams } from 'react-router-dom';
+
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -19,6 +21,21 @@ export default function JobBoard() {
     const [offset, setOffset] = useState(0); // New state variable for pagination offset
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCountry, setSelectedCountry] = useState(''); // This will store the clicked country
+
+    const [searchParams] = useSearchParams();
+    const countryParam = searchParams.get('country') || '';
+
+      // when countryParam changes (or on mount), apply it:
+    useEffect(() => {
+        if (countryParam) {
+        setSelectedCountry(countryParam);
+        fetchCountry(countryParam);
+        } else {
+        // no country filter? fetch the first page
+        fetchJobs();
+        }
+        // reset pagination, etc., if needed
+    }, [countryParam]);
 
 
     const navigate = useNavigate();

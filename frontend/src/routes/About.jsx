@@ -14,9 +14,9 @@ export default function About() {
     return(
         <>
         <Header />
-        <div className='flex flex-col text-neutral-900 text-xl w-full p-8 m-auto md:mt-16 gap-4 md:w-3/5 bg-white text-center md:text-left'>
+        <div className='flex flex-col rounded-xl text-neutral-900 text-xl w-full p-16 m-auto md:mt-16 gap-4 md:w-3/5 bg-white text-center md:text-left'>
             <div className="flex flex-col">
-                <h1 className="text-4xl font-semibold mb-2">About Us</h1>
+                <h1 className="text-4xl font-bold tracking-tight mb-2">About Us</h1>
                 <p>At ImpactHub, we believe that impactful work starts with connecting the right people to the right opportunities. We’re more than just a jobs board—we’re a global platform dedicated to helping individuals and organizations make meaningful contributions to humanitarian, development, and sustainability initiatives around the world.</p>
             </div>
 
@@ -32,7 +32,7 @@ export default function About() {
 
             <h1 className="text-2xl font-semibold mb-4"><span className="border-b-2 border-rose-600 pb-1">What You'll Find at ImpactHub</span></h1>
 
-            <div className="flex flex-col md:flex-row gap-8 text-center py-8">
+            <div className="flex flex-col text-sm md:flex-row gap-8 text-center py-8">
 
                 <div className="flex flex-col mb-4">
                     <h1>🌍</h1>

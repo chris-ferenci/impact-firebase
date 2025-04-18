@@ -4,7 +4,7 @@ import Header from '../components/Header/Header';
 
 function MapPage() {
     return (
-        <div className='flex flex-col w-screen bg-gray-100'>
+        <div className='flex flex-col w-screen text-neutral-900 bg-gray-100'>
             <Header />
             <div className="container mx-auto mt-10 px-4 ">
                 <div className='w-full h-full container mx-auto bg-white rounded-lg p-8'>
