@@ -11,12 +11,13 @@ function MapWithCountryJobs() {
   const [countries, setCountries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-   // Zoom and center state
-   const [zoom, setZoom] = useState(1);
-   const [center, setCenter] = useState([0,0]);
- 
-   // State for selected country popup
-   const [selectedMarker, setSelectedMarker] = useState(null);
+  // Zoom and center state
+  const [zoom, setZoom] = useState(1);
+  const [center, setCenter] = useState([0,0]);
+
+  // State for selected country popup
+  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [hoveredCountry, setHoveredCountry] = useState(null);
 
   useEffect(() => {
     const fetchCountryFacets = async () => {
@@ -104,7 +105,12 @@ function MapWithCountryJobs() {
                         key={geo.rsmKey} 
                         geography={geo} 
                         fill="#EAEAEC" 
-                        stroke="#D6D6DA" 
+                        stroke="#D6D6DA"
+                        style={{
+                          default:  { outline: 'none' },
+                          hover:    { outline: 'none' },
+                          pressed:  { outline: 'none' }
+                        }}
                       />
                     ))
                   }
@@ -119,13 +125,25 @@ function MapWithCountryJobs() {
                   // 3) Calculate dynamic radius
                   const radius = scaleMarkerSize(count);
 
+                  const isHovered = hoveredCountry === value;
+
                   return (
                     <Marker 
                       key={value} 
                       coordinates={coords}
                       onClick={() => handleMarkerClick(value, count, coords)}
+                      onMouseEnter={() => setHoveredCountry(value)}
+                      onMouseLeave={() => setHoveredCountry(null)}
                     >
-                      <circle r={radius} fill="#e11d48" stroke="#fff" strokeWidth={2} />
+
+                      <circle 
+                      r={isHovered ? radius * 1.4 : radius}
+                      fill={isHovered ? "#B5173A" : "#e11d48"}
+                      stroke="#fff" 
+                      strokeWidth={2} 
+                      style={{ transition: "all 0.2s ease", cursor: "pointer" }}
+                      />
+
                       <text
                         textAnchor="middle"
                         y={-10}
@@ -140,27 +158,75 @@ function MapWithCountryJobs() {
                 {/* Popup for selected marker */}
                 {selectedMarker && (
                   <Marker coordinates={selectedMarker.coords}>
+                    <foreignObject
+                      x={-100}   // half of your max popup width
+                      y={-80}    // push it up above the circle
+                      width={200}
+                      height={100}
+                    >
+                      <div
+                        xmlns="http://www.w3.org/1999/xhtml"
+                        className="
+                          w-full h-full
+                          p-4
+                          bg-white
+                          rounded-lg
+                          shadow-lg
+                          border border-gray-300
+                          flex flex-col
+                          items-center
+                          justify-center
+                          max-w-xs        /* never wider than ~20rem */
+                          text-center
+                          text-sm
+                          break-words     /* wrap long country names */
+                        "
+                      >
+                        {/* Title + count */}
+                        <p className="font-semibold text-base leading-tight">
+                          {selectedMarker.value}
+                        </p>
+                        <p className="text-neutral-500">{selectedMarker.count} jobs</p>
+                        {/* Action link */}
+                        <Link
+                          to={`/job-details?country=${encodeURIComponent(selectedMarker.value)}`}
+                          className="
+                            mt-2
+                            inline-block
+                            bg-rose-600
+                            hover:bg-rose-700
+                            text-white
+                            text-xs
+                            px-3 py-1
+                            rounded
+                          "
+                        >
+                          View Jobs
+                        </Link>
+                      </div>
+                    </foreignObject>
+
                     {/* now (0,0) is the circle’s center in screen‑space */}
-                    <g transform="translate(0, -20)">
+                    {/* <g transform="translate(0, -20)">
                       <rect
                         x={-50}
                         y={-60}
-                        width={100}
-                        height={40}
+                        width={200}
+                        height={60}
                         rx={5}
                         ry={5}
                         fill="white"
                         stroke="#333"
                       />
                       <text
-                        x={0}
+                        x={50}
                         y={-38}
                         textAnchor="middle"
                         style={{ fontFamily: 'system-ui', fontSize: '10px', fill: '#333' }}
                       >
                         {selectedMarker.value} ({selectedMarker.count})
                       </text>
-                      <foreignObject x={-40} y={-30} width={80} height={30}>
+                      <foreignObject x={0} y={-30} width={80} height={30}>
                         <div className="flex justify-center items-center h-full">
                           <Link
                             to={`/job-details?country=${encodeURIComponent(selectedMarker.value)}`}
@@ -170,7 +236,7 @@ function MapWithCountryJobs() {
                           </Link>
                         </div>
                       </foreignObject>
-                    </g>
+                    </g> */}
                   </Marker>
                 )}
               </ZoomableGroup>
