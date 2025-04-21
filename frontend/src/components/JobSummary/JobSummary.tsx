@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 
 function JobSummary({ jobDescription }) {
     const [summary, setSummary] = useState("");
@@ -55,18 +58,16 @@ function JobSummary({ jobDescription }) {
         setLoading(false);
     };
 
-    if (loading) {
-        return (
-            <div className="text-sm text-neutral-600">
-                Summarizing<span>{dots}</span>
-            </div>
-        );
-    }
-
-
+    if (loading) return <div className="text-sm text-neutral-600">Summarizing<span>{dots}</span></div>;
     if (error) return <p>Error: {error}</p>;
 
-    return <p>{summary}</p>;
+    return(  
+        <div className="prose prose-sm sm:prose lg:prose-lg">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {summary}
+            </ReactMarkdown>
+        </div>
+    );
 }
 
 export default JobSummary;
