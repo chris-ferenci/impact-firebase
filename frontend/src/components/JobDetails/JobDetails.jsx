@@ -161,8 +161,9 @@ function JobDetails() {
                         </div>
 
                         {/* Right Column for Larger Screens */}
-                        <div className="hidden md:block md:col-span-1 d:sticky md:top-0 md:h-screen px-8 md:pt-16">
-                            <div className="bg-white p-6 border-2 border-rose-200 rounded-md">
+                        <div className="flex justify-between md:block md:col-span-1 d:sticky md:top-0 md:h-screen px-4 md:pt-4 border-l border-gray-200 bg-gray-50">
+                            
+                            <div className="bg-white p-8 rounded-md border border-gray-200 ">
                                 <div className='flex flex-row items-center'>
                                     <h2 className="text-lg font-bold">Impact Intelligence</h2>
                                     <p className='ml-2 font-semibold text-neutral-500 text-xs'>BETA</p>
@@ -173,14 +174,16 @@ function JobDetails() {
                                 <JobSummary jobDescription={job.fields['body-html']} />
                             </div>
 
-                            <a
-                            className="block mt-8 text-center font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white"
-                            href={job.fields.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            >
-                            Apply
-                            </a>
+                            <div>
+                                <a
+                                className="block mt-8 text-center font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white hover:text-white"
+                                href={job.fields.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                >
+                                Apply
+                                </a>
+                            </div>
 
                         </div>
                     </div>

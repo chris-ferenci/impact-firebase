@@ -62,7 +62,7 @@ function JobSummary({ jobDescription }) {
     if (error) return <p>Error: {error}</p>;
 
     return(  
-        <div className="prose prose-sm sm:prose lg:prose-lg">
+        <div className="overflow-auto prose prose-sm sm:prose lg:prose-lg">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {summary}
             </ReactMarkdown>
