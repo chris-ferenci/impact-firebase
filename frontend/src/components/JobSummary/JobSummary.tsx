@@ -63,7 +63,34 @@ function JobSummary({ jobDescription }) {
 
     return(  
         <div className="overflow-auto prose prose-sm sm:prose lg:prose-lg">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}
+            components={{
+                h1: ({node,...props}) => (
+                  <h1
+                    className="text-xl font-semibold mb-2 mt-4"  // smaller than prose’s default
+                    {...props}
+                  />
+                ),
+                h2: ({node,...props}) => (
+                  <h2
+                    className="text-lg font-semibold mb-1 mt-3"
+                    {...props}
+                  />
+                ),
+                h3: ({node,...props}) => (
+                  <h3
+                    className="text-base font-medium mb-1 mt-2"
+                    {...props}
+                  />
+                ),
+                p: ({node,...props}) => (
+                  <p className="mb-2 leading-snug" {...props}/>
+                ),
+                li: ({node,...props}) => (
+                  <li className="mb-1" {...props}/>
+                ),
+              }}
+            >
             {summary}
             </ReactMarkdown>
         </div>
