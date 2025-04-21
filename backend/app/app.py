@@ -67,7 +67,7 @@ def summarize():
     try:
         # Use the OpenAI client to create a chat completion
         completion = client.chat.completions.create(
-            model="gpt-4o-mini",  # Use the appropriate model (e.g., "gpt-4" or "gpt-3.5-turbo")
+            model="gpt-4.1",  # Use the appropriate model (e.g., "gpt-4" or "gpt-3.5-turbo")
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": f"Summarize the following job description in one 3-4 sentence paragraph. If you find see a salary, add it as a bulletpoint:\n{job_description}"}
