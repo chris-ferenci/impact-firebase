@@ -177,7 +177,7 @@ function JobDetails() {
 
                         <div className='p-6'>
                             <a
-                            className="block mt-8 text-center font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white hover:text-white"
+                            className="block text-center font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white hover:text-white"
                             href={job.fields.url}
                             target="_blank"
                             rel="noreferrer"

@@ -74,9 +74,9 @@ def summarize():
                     You are a recruiting‐domain assistant.  
                     When given a job description, produce:
 
-                    1. **Overview**: 3–4 sentence paragraph summarizing the role’s purpose.  
-                    2. **Key Responsibilities**: 3–5 bullet points.  
-                    3. **Qualifications**: 3–5 bullet points.  
+                    1. **Overview**: 1-2 sentence paragraph summarizing the role’s purpose.  
+                    2. **Key Responsibilities**: 3 bullet points.  
+                    3. **Qualifications**: 3 bullet points.  
                     4. **Salary**: single bullet if a salary is mentioned; otherwise “Not specified.”  
                     5. **Location**: single bullet if a location is mentioned; otherwise “Remote or unspecified.”
 
