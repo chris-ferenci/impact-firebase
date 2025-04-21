@@ -77,7 +77,7 @@ function JobListingBoard({ getCountryFlag, selectedCountry, handleCountrySelect 
     if (country) {
       console.log("filtered country", country)
       payload.filter = {
-        field: 'country',
+        field: 'country.name',
         value: country
       };
     }
