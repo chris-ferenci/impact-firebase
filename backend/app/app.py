@@ -69,8 +69,22 @@ def summarize():
         completion = client.chat.completions.create(
             model="gpt-4.1",  # Use the appropriate model (e.g., "gpt-4" or "gpt-3.5-turbo")
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": f"Summarize the following job description in one 3-4 sentence paragraph. If you find see a salary, add it as a bulletpoint:\n{job_description}"}
+                {"role": "system", 
+                 "content": """
+                    You are a recruiting‐domain assistant.  
+                    When given a job description, produce:
+
+                    1. **Overview**: 3–4 sentence paragraph summarizing the role’s purpose.  
+                    2. **Key Responsibilities**: 3–5 bullet points.  
+                    3. **Qualifications**: 3–5 bullet points.  
+                    4. **Salary**: single bullet if a salary is mentioned; otherwise “Not specified.”  
+                    5. **Location**: single bullet if a location is mentioned; otherwise “Remote or unspecified.”
+
+                    Always format exactly as Markdown, with headings and bullets.  
+                    Be concise, factual, and use professional tone.
+                    """},
+                {"role": "user", 
+                 "content": f"""Here is the full job description: {job_description} Please follow the above structure exactly."""}
             ]
         )
         # Extract the summarized content
