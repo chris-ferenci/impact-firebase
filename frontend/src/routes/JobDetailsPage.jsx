@@ -15,12 +15,15 @@ export default function JobDetailsPage() {
 
     return(
         <>
-        <div className='flex flex-col w-full bg-white min-h-[600px]'>
+        <div className='flex flex-col w-full bg-white h-screen'>
         <Header />
+            <div className="flex-1 overflow-hidden">
         
-            <ErrorBoundary>
-                <JobDetails />
-            </ErrorBoundary>
+                <ErrorBoundary>
+                    <JobDetails />
+                </ErrorBoundary>
+
+            </div>
         </div>
         </>
 

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Markdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 import parser, { domToReact, attributesToProps } from 'html-react-parser';
-import './JobDetails.css';
+// import './JobDetails.css';
 import Header from '../Header/Header';
 import JobSummary from '../JobSummary/JobSummary';
 import { IoChevronBack, IoChevronDown, IoChevronUp } from "react-icons/io5";
@@ -119,76 +117,77 @@ function JobDetails() {
     }
 
     return (
-        <>
+        <div className="flex flex-col h-full overflow-hidden">
             {data.map((job) => (
-                <div className="job-details bg-white w-full text-neutral-900" key={job.id}>
-                    <div className="md:grid md:grid-cols-3 md:gap-8">
+                <div key={job.id} className="md:grid md:grid-cols-3 md:gap-8 flex-1 h-full">
+                    
+                    {/* Left Column */}
+                    <div className="md:col-span-2 overflow-y-auto h-full p-8 md:p-16">
+                        <button
+                            className="bg-white mb-8 rounded font-bold text-lg flex items-center text-gray-900 hover:text-rose-600"
+                            onClick={() => window.history.back()}
+                        >
+                            <IoChevronBack className="mr-2" /> Back
+                        </button>
                         
-                        {/* Left Column */}
-                        <div className="md:col-span-2 md:overflow-y-auto md:h-screen p-8 md:p-16">
-                            <button
-                                className="bg-white mb-8 rounded font-bold text-lg flex items-center text-gray-900 hover:text-rose-600"
-                                onClick={() => window.history.back()}
-                            >
-                                <IoChevronBack className="mr-2" /> Back
-                            </button>
-                            
-                            <div className='md:border-l-4 md:border-rose-500 md:pl-4'>
-                                <p className='text-xl'>{job.fields.source && job.fields.source[0].name}</p>
-                                <h1 className="font-bold text-4xl text-neutral-900 mb-4 capitalize">
-                                    {job.fields.title}
-                                </h1>
-                            
+                        <div className='md:border-l-4 md:border-rose-500 md:pl-4'>
+                            <p className='text-xl'>{job.fields.source && job.fields.source[0].name}</p>
+                            <h1 className="font-bold text-4xl text-neutral-900 mb-4 capitalize">
+                                {job.fields.title}
+                            </h1>
+                        
 
-                                <div className="flex gap-8 mb-4">
-                                    <div>
-                                        <h2 className="font-bold">Region</h2>
-                                        <p>{job.fields.country?.[0]?.name || "Unknown"}</p>
-                                    </div>
+                            <div className="flex gap-8 mb-4">
+                                <div>
+                                    <h2 className="font-bold">Region</h2>
+                                    <p>{job.fields.country?.[0]?.name || "Unknown"}</p>
+                                </div>
 
-                                    <div>
-                                        <h2 className="font-bold">Closing Date</h2>
-                                        <p>{new Date(job.fields.date?.closing ? new Date(job.fields.date.closing).toLocaleDateString() : "N/A").toLocaleDateString()}</p>
-                                    </div>
+                                <div>
+                                    <h2 className="font-bold">Closing Date</h2>
+                                    <p>{new Date(job.fields.date?.closing ? new Date(job.fields.date.closing).toLocaleDateString() : "N/A").toLocaleDateString()}</p>
                                 </div>
                             </div>
-
-                            <h2 className="text-lg font-semibold py-2 mt-8 mb-2 text-neutral-700"><span className='border-b-2 border-rose-500 pb-1'>Description</span></h2>
-                            <div
-                                className="text-lg leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: job.fields['body-html'] || "<p>No description available.</p>" }} // Safe Fallback
-                            />
                         </div>
 
-                        {/* Right Column for Larger Screens */}
-                        <div className="flex justify-between md:block md:col-span-1 d:sticky md:top-0 md:h-screen px-4 md:pt-4 border-l border-gray-200 bg-gray-50">
-                            
-                            <div className="bg-white p-8 rounded-md border border-gray-200 ">
-                                <div className='flex flex-row items-center'>
-                                    <h2 className="text-lg font-bold">Impact Intelligence</h2>
-                                    <p className='ml-2 font-semibold text-neutral-500 text-xs'>BETA</p>
-                                </div>
-                                <p className="text-sm italic text-neutral-600 mb-2">
-                                    Summarized by OpenAI
-                                </p>
-                                <div className="min-h-3/4">
-                                <JobSummary jobDescription={job.fields['body-html']} />
-                                </div>
-                            </div>
-
-                            <div>
-                                <a
-                                className="block mt-8 text-center font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white hover:text-white"
-                                href={job.fields.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                >
-                                Apply
-                                </a>
-                            </div>
-
-                        </div>
+                        <h2 className="text-lg font-semibold py-2 mt-8 mb-2 text-neutral-700"><span className='border-b-2 border-rose-500 pb-1'>Description</span></h2>
+                        <div
+                            className="text-lg leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: job.fields['body-html'] || "<p>No description available.</p>" }} // Safe Fallback
+                        />
                     </div>
+
+                    {/* Right Column for Larger Screens */}
+                    <div className="md:col-span-1 flex flex-col h-full min-h-0 border-l border-gray-200 bg-gray-50">
+
+
+                        {/* Scrollable Summary Area */}
+                        <div className="flex-1 overflow-y-auto p-6 min-h-0">
+                            <div className='flex flex-row items-center mb-2'>
+                                <h2 className="text-lg font-bold">Impact Intelligence</h2>
+                                <p className='ml-2 font-semibold text-neutral-500 text-xs'>BETA</p>
+                            </div>
+                            <p className="text-sm italic text-neutral-600 mb-4">
+                                Summarized by OpenAI
+                            </p>
+                           
+                            <JobSummary jobDescription={job.fields['body-html']} />
+                        
+                        </div>
+
+                        <div className='p-6'>
+                            <a
+                            className="block mt-8 text-center font-bold bg-rose-600 px-8 py-4 rounded hover:bg-rose-800 text-white hover:text-white"
+                            href={job.fields.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            >
+                            Apply
+                            </a>
+                        </div>
+
+                    </div>
+                    
 
                     {/* Sticky Footer for Small Screens */}
                     <div className="md:hidden fixed bottom-0 w-full bg-white border-t-4 border-rose-600">
@@ -224,7 +223,7 @@ function JobDetails() {
                     </div>
                 </div>
             ))}
-        </>
+        </div>
     );
 }
 
