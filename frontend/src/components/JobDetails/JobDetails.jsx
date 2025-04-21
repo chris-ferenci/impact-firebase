@@ -171,7 +171,9 @@ function JobDetails() {
                                 <p className="text-sm italic text-neutral-600 mb-2">
                                     Summarized by OpenAI
                                 </p>
+                                <div className="min-h-screen">
                                 <JobSummary jobDescription={job.fields['body-html']} />
+                                </div>
                             </div>
 
                             <div>
