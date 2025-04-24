@@ -11,8 +11,9 @@ function Header() {
                 <div className="flex justify-between items-center py-4 px-8">
                 <Link to="/">
                     <h1 className="text-2xl text-gray-900 font-bold tracking-tighter">
-                        <span className="text-rose-600 font-bold">impact</span>hub
+                        <span className="text-rose-600 font-bold">impact</span>works
                     </h1>
+                    <p className="text-sm text-neutral-500 tracking-tight">International Career Opportunities</p>
                 </Link>
 
                 {/* Hamburger/Close Button */}
