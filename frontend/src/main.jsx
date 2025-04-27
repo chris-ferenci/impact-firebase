@@ -14,6 +14,7 @@ import JobDetailsPage from './routes/JobDetailsPage.jsx';
 import JobBoard from './routes/JobBoard.jsx';
 import JobDetails from './components/JobDetails/JobDetails.jsx';
 import OpportunitiesHub from './routes/OpportunitiesHub.jsx';
+import MapPage from './routes/MapPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: "/about",
     element: <About/>,
+  },
+  {
+    path: "/map",
+    element: <MapPage />,
   },
 ]);
 

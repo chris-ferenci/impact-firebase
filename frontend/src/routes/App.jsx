@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -9,12 +10,8 @@ import '../App.css';
 
 import Header from '../components/Header/Header';
 import Search from '../components/Search/Search';
-import JobCard from '../components/JobCard/JobCard';
-import JobDetails from '../components/JobDetails/JobDetails';
 import CountryList from '../components/CountryList/CountryList';
-import CategoryList from '../components/CategoryList/CategoryList';
 import heroImg from '../assets/img/hero-img-1.jpg';
-import JobDetailsPage from './JobDetailsPage';
 import countryFlags from '../data/countryFlags.json'
 import JobListingBoard from '../components/JobListingBoard/JobListingBoard';
 
@@ -22,32 +19,27 @@ import ReactGA from "react-ga4";
 const TRACKING_ID = "G-9LT7BKNPSS"; // OUR_TRACKING_ID
   ReactGA.initialize(TRACKING_ID);
 
+const cascadeVariant = {
+hidden: { opacity: 0, y: 20 },
+visible: (i = 1) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+    delay: i * 0.2,
+    duration: 0.6,
+    ease: 'easeOut',
+    },
+}),
+};
+
 
 function App() {
     const helmetContext = {};
-    const username = 'aidify-user-' + uuidv4();
 
-    const [data, setData] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isMoreLoading, setIsMoreLoading] = useState(false);
+    const [selectedCountry, setSelectedCountry] = useState(''); // Lift state up here
     const [countries, setCountries] = useState([]);
     const [jobTypes, setJobTypes] = useState([]);
-    const [selectedJobType, setSelectedJobType] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filterCountry, setFilterCountry] = useState('');
-    const [selectedJob, setSelectedJob] = useState(null);
-    const [selectedCountry, setSelectedCountry] = useState(''); // This will store the clicked country
-    const [selectedCategory, setSelectedCategory] = useState('');
 
-    const [offset, setOffset] = useState(0); // New state variable for pagination offset
-
-    //Utilities
-    const toTitleCase = (str) => {
-        return str.replace(/\w\S*/g, (txt) => {
-          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        });
-      };
-    
     // Data
 
     const getCountryFlag = (countryName) => {
@@ -58,166 +50,18 @@ function App() {
 
     const handleCountrySelect = (country) => {
       setSelectedCountry(country);
-      fetchCountry(country);
     };
 
-    const handleJobTypeSelect = (jobType) => {
-        setSelectedJobType(jobType);
-        fetchJobType(jobType);
-    }
-
-    // const handleCategorySelect = (category) => {
-    //     setSelectedCategory(category);
-    //     fetchJobs(category);
-    // };
-
-    const filteredJobs = data.filter(job => 
-      job.fields.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (!selectedCountry || (job.fields.country && job.fields.country[0].name === selectedCountry)) &&
-      (!selectedJobType || (job.fields.type && job.fields.type[0].name === selectedJobType))
-    );
-
-    const loadMoreJobs = () => {
-        setOffset(prevOffset => {
-            const newOffset = prevOffset + 9;
-            setIsMoreLoading(true); // Set loading more to true
-            fetchJobs(newOffset, true); // Pass newOffset directly to the fetch function
-            return newOffset;
-        });
-    };
-
-    // Fetching jobs
-
-    const fetchJobs = async (newOffset = offset, isMore = false) => {
-
-        if (!isMore) setIsLoading(true);
-        else setIsMoreLoading(true);
-        
-        const startTime = Date.now();
-
-        const payload = {
-            "offset": newOffset,
-            "limit": 9,
-            "preset": "latest",
-            "profile": "list",
-            "fields": {
-                "include": ["career_categories.name", "source.shortname", "type.name"]
-            }
-        };
-
-        try {
-            const response = await axios.post(`https://api.reliefweb.int/v1/jobs?appname=${username}`, payload);
-            const updatedData = response.data.data.map(job => ({
-                ...job,
-                fields: {
-                    ...job.fields,
-                    title: toTitleCase(job.fields.title)
-                }
-            }));
-            setData(prevData => [...prevData, ...updatedData]);
-
-            const delay = 1500 - (Date.now() - startTime);
-            setTimeout(() => {
-                if (!isMore) setIsLoading(false);
-                else setIsMoreLoading(false);
-            }, delay > 0 ? delay : 0);
-
-        } catch (error) {
-            console.error("Failed to fetch jobs:", error);
-            if (!isMore) setIsLoading(false);
-            else setIsMoreLoading(false);
-        }
-        
-    };
-
-    const fetchCountry = async (country = '') => {
-
-        setIsLoading(true);
-        const startTime = Date.now();
-
-        const params = {
-            offset: 0,
-            limit: 9,
-            preset: 'latest',
-            profile: 'list',
-            fields: {
-                include: ["career_categories.name", "source.shortname"]
-            },
-            filter: {
-                field: 'country',
-                value: country
-            }
-        };
-  
-        try {
-            const response = await axios.get(`https://api.reliefweb.int/v1/jobs?appname=${username}`, { params });
-            setData(response.data.data);
-
-            const delay = 1500 - (Date.now() - startTime);
-            setTimeout(() => {
-                setData(response.data.data);  // Assume data is in response.data.data
-                setIsLoading(false);
-            }, delay > 0 ? delay : 0);
-            
-        } catch (error) {
-            console.error("Failed to fetch country data:", error);
-            setIsLoading(false);
-        }
-      };
-
-      const fetchJobType = async (jobType = '') => {
-        const params = {
-            facets: [
-                {
-                    field: "type.name"
-                }
-            ],
-            limit: 0,
-            filter: {
-                field: 'type.name',
-                value: jobType
-            }
-        };
-
-        try {
-            const response = await axios.get(`https://api.reliefweb.int/v1/jobs?appname=${username}`, { params });
-            setJobTypes(response.data.embedded.facets['type.name'].data);
-        } catch (error) {
-            console.error("Failed to fetch job types:", error);
-        }
-    };
-
-
-    useEffect(() => {
-        fetchJobs();
-        // Fetching countries
-        fetch(`https://api.reliefweb.int/v1/jobs?appname=${username}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "facets": [
-                    {
-                        "field": "country.name",
-                        "limit": 500
-                    }
-                ],
-                "limit": 0
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            setCountries(data.embedded.facets['country.name'].data);
-        });
-    }, []);
+    // const handleJobTypeSelect = (jobType) => {
+    //     setSelectedJobType(jobType);
+    //     fetchJobType(jobType);
+    // }
 
     return (
     <HelmetProvider context={helmetContext}>
-
-      <div className="app text-neutral-900">
+      <div className="w-screen bg-gray-100 text-neutral-900">
         <Helmet>
-            <title>ImpactCareers | Careers & Volunteering in Health, Climate, International Development</title>
+            <title>ImpactCareers | Opportunities in Health, Climate, International Development</title>
             <meta name="description" content="Discover a diverse range of career, job, and volunteer opportunities in the health, climate change, and international development sectors. Connect with impactful positions globally and advance your career while contributing to significant causes. Explore our updated listings to find roles that match your skills and passions." />
             {/* Open Graph */}
             <meta property="og:title" content="Global Opportunities Board | Careers & Volunteering in Health, Climate, International Development" />
@@ -237,14 +81,54 @@ function App() {
         <div>
             <div className='flex flex-col md:flex-row w-full bg-white'>
 
-                <div className="w-full md:w-1/2 flex flex-col px-16 py-16">
-                    <h1 className='text-6xl text-left font-bold mb-8 leading-tighter tracking-tight'>Work opportunities that <span className='text-rose-600'>make an impact</span></h1>
-                    <h2 className='text-2xl text-left font-regular mb-8 leading-tight'>Explore leading job and volunteer opportunities in health, climate sustainability, and international development.</h2>
-                    
-                    {/* <CategoryList categories={categories} onSelectCategory={handleCategorySelect} /> */}
+                <motion.div 
+                initial="hidden"
+                animate="visible"
+                className="w-full md:w-1/2 flex flex-col flex-wrap px-8 py-8 md:px-16 md:py-16"
+                >
+                    <motion.h1 
+                    className='text-5xl md:text-6xl text-left font-bold mb-8 leading-tighter tracking-tight'
+                    custom={1}
+                    variants={cascadeVariant}
+                    >
+                        Make your <span className='text-rose-600'>Impact</span>
+                    </motion.h1>
 
-                    <CountryList countries={countries} onSelectCountry={handleCountrySelect} getCountryFlag={getCountryFlag} maxCountries={6}/>
-                </div>
+                    <motion.h2 
+                    className='text-2xl text-left font-regular mb-8 leading-tight'
+                    custom={2}
+                    variants={cascadeVariant}
+                    >
+                        Explore leading job and volunteer opportunities in health, climate sustainability, and international development.
+
+                    </motion.h2>
+                    
+                    <motion.p 
+                    className='text-neutral-800 font-bold'
+                    custom={3}
+                    variants={cascadeVariant}
+                    >
+                        Opportunities Around the Globe
+                    </motion.p>
+                    
+                    <motion.div custom={4} variants={cascadeVariant}>
+                        <CountryList 
+                        countries={countries}
+                        onSelectCountry={handleCountrySelect}
+                        getCountryFlag={getCountryFlag} 
+                        maxCountries={6}
+                        showMoreButton={false}
+                        justify='start'
+                        />
+                    </motion.div>
+
+                    <motion.div className='flex mt-4' custom={5} variants={cascadeVariant}>
+                        <Link to='/jobs'>
+                            <button className='bg-rose-600 hover:bg-rose-800 rounded  text-white px-4 py-2'>Browse All Opportunities</button>
+                        </Link>
+                    </motion.div>
+
+                </motion.div>
 
                 <div className='hidden sm:block md:w-1/2 bg-gray-100'>
                     <img className="overflow-x-hidden" src={heroImg} alt="hero-img" style={{objectFit: "cover", height:"100%", width:"auto"}} />
@@ -252,53 +136,29 @@ function App() {
 
             </div>
 
-            <div className='flex flex-row w-full bg-neutral-900 px-4 py-4 justify-center'>
-                {/* <CountryList countries={countries} onSelectCountry={handleCountrySelect} getCountryFlag={getCountryFlag}/> */}
+            {/* <div className='flex flex-row w-full bg-neutral-900 px-4 py-4 justify-center'>
                 <Search  />
-            </div>
+            </div> */}
 
 
             {/* JOB LIST */}
-
-            <div className='flex flex-col w-full bg-gray-50 pt-8 px-16'>
-
-                <h2 className='text-center text-2xl text-gray-900 font-bold'>Latest Jobs Around the World</h2>
-
-                <p className='text-center text-lg mb-4'>Browse the latest opportunities from around the globe</p>
-                
-                <div className='flex justify-center'>
-                    <CountryList 
-                        countries={countries} 
-                        onSelectCountry={handleCountrySelect} 
-                        getCountryFlag={getCountryFlag} 
-                        maxCountries={15}
-                    />
-                </div>
-                <Link className='text-center mt-4 text-rose-600' to="/jobs">View All Countries</Link>
-            </div>
-
-
-            <JobListingBoard 
-            filteredJobs={filteredJobs}
-            getCountryFlag={getCountryFlag}
-            jobTypes={jobTypes}
-            onSelectJobType={handleJobTypeSelect}
-            isLoading={isLoading}
-            />
-
-            {/* End Job list */}
+            
+            <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.6 }}
+            >
+                <JobListingBoard
+                selectedCountry={selectedCountry} // Pass selectedCountry down
+                getCountryFlag={getCountryFlag}
+                handleCountrySelect={handleCountrySelect}
+                />
+            </motion.div>
         
 
         </div>
 
-        <div className='flex w-full bg-gray-50 justify-center pb-8'>
-            <button
-                onClick={loadMoreJobs}
-                disabled={isMoreLoading}
-                className='bg-rose-600 rounded border-2 border-rose-600 text-white px-8 py-2'>
-                {isMoreLoading ? 'Loading...' : 'Load More'}
-            </button>
-        </div>
+        
 
         </div>
 

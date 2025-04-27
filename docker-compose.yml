@@ -1,0 +1,20 @@
+services:
+  backend:
+    build:
+      context: ./backend/app
+    ports:
+      - "5001:5000"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}  # Pass the environment variable
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_BACKEND_URL: "https://impact-api-dev.onrender.com"
+    ports:
+      - "3000:80" # Map the Nginx port to 3000
+    environment:
+      - REACT_APP_BACKEND_URL=https://impact-api-dev.onrender.com
+    depends_on:
+      - backend

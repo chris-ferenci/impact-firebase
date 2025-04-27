@@ -1,50 +1,141 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Header.css';
 import { Link } from 'react-router-dom';
 
 function Header() {
-    return (
-        <header className='grid grid-cols-2 place-items-center sticky top-0 z-40 w-full bg-gray-50 py-4 px-8 border-b-4 border-gray-900'>
-            
-            <Link className="justify-self-start" to="/">
-            <h1 className=' text-2xl text-gray-900 font-bold tracking-tighter'>
-                <span className='text-rose-600 font-bold '>impact</span>careers
-            </h1>
-            </Link>
+    const [menuOpen, setMenuOpen] = useState(false);
 
-            <div className='justify-self-end flex flex-row'>
-                <ul className='flex gap-8'>
-                    <li>
-                        <Link className=' text-neutral-900' to="/jobs">All Jobs</Link>
-                    </li>
-                    {/* <li>
-                        <Link className=' text-neutral-900' to="/about">About Us</Link>
-                    </li> */}
-                </ul>
-                
-                
+    return (
+        <header className="sticky top-0 z-40 w-full bg-gray-50 border-b-4 border-gray-900">
+            <div className="flex items-center justify-between px-8 py-4 min-h-[60px]">
+                <div className="flex justify-between items-center py-4 px-8">
+                <Link to="/">
+                    <h1 className="text-2xl text-gray-900 font-bold tracking-tighter">
+                        <span className="text-rose-600 font-bold">impact</span>works
+                    </h1>
+                    <p className="text-sm text-neutral-500 tracking-tight">International Career Opportunities</p>
+                </Link>
+
+                {/* Hamburger/Close Button */}
+                <button
+                    className="md:hidden text-gray-900 focus:outline-none"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                >
+                    {menuOpen ? (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="w-8 h-8"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+                    ) : (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="w-8 h-8"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M4 6h16M4 12h16m-7 6h7"
+                            />
+                        </svg>
+                    )}
+                </button>
             </div>
 
-            {/* <div className="justify-self-center">
-                <Link to="/hub">Opportunities Hub</Link>
-            </div> */}
+                {/* Desktop Menu */}
+                <nav className="hidden md:flex md:items-center md:space-x-8 min-w-[400px] justify-end">
+                    <ul className="flex space-x-8">
+                        <li>
+                            <Link
+                                className="text-neutral-900 hover:text-neutral-900 hover:border-b-4 hover:border-neutral-900"
+                                to="/"
+                            >
+                                Home
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                className="text-neutral-900 hover:text-neutral-900 hover:border-b-4 hover:border-neutral-900"
+                                to="/map"
+                            >
+                                Map
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                className="text-neutral-900 hover:text-neutral-900 hover:border-b-4 hover:border-neutral-900"
+                                to="/about"
+                            >
+                                About Us
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                className="text-rose-600 font-bold md:p-4 rounded hover:bg-rose-100 hover:text-rose-600"
+                                to="/"
+                            >
+                                Support Us
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
 
-            {/* <div className='justify-self-end flex flex-row items-center gap-8'>
-
-                <div>
-                    <p>Saved Jobs</p>
-                </div>
-
-                <div className='flex flex-row items-center'>
-                    <p className='mr-2'>Chris Ferenci</p>
-                    <img className='circular-profile' src='https://i.pravatar.cc/64' />
-                </div>
-
-            </div> */}
-
-          
-            
-
+            {/* Mobile Menu */}
+            {menuOpen && (
+                <nav className="md:hidden bg-gray-50  border-gray-900">
+                    <ul className="flex flex-col space-y-4 py-4 px-8">
+                        <li>
+                            <Link
+                                className="text-neutral-900 hover:text-neutral-900 hover:border-b-4 hover:border-neutral-900"
+                                to="/jobs"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                All Jobs
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                className="text-neutral-900 hover:text-neutral-900 hover:border-b-4 hover:border-neutral-900"
+                                to="/map"
+                            >
+                                Map
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                className="text-neutral-900 hover:text-neutral-900 hover:border-b-4 hover:border-neutral-900"
+                                to="/about"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                About Us
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                className="text-rose-600 font-bold md:p-4 md:border-b-4 md:border-rose-600 hover:bg-rose-600 hover:text-white"
+                                to="/"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                Post An Opportunity
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
+            )}
         </header>
     );
 }
